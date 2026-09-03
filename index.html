@@ -1,0 +1,748 @@
+<!DOCTYPE html><html lang="vi"><head>
+    <meta charset="utf-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=658e0c30-af50-4e92-8755-3dbd0d192949
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=658e0c30-af50-4e92-8755-3dbd0d192949">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều phối DVC siêu tốc</title>
+    <!-- Thẻ SEO cơ bản -->
+    <meta name="description" content="Hệ thống Điều phối DVC siêu tốc - Truy cập nhanh thủ tục hành chính, hỗ trợ cán bộ xử lý hồ sơ hiệu quả.">
+    <meta name="keywords" content="dịch vụ công, thủ tục hành chính, điều phối dvc, trung tâm hành chính công">
+    
+    <!-- Thẻ hiển thị trên Zalo/Facebook -->
+    <meta property="og:title" content="Hệ thống Điều phối DVC Siêu tốc">
+    <meta property="og:description" content="Truy cập và xử lý nhanh thủ tục hành chính. Hỗ trợ tra cứu, nộp ẩn danh và đồng bộ hệ thống nội bộ.">
+    <meta property="og:image" content="../cdn.jsdelivr.net/gh/ChippedTopaz/dieu-phoi@main/kettle.png"> <!-- Lấy luôn ảnh banner làm ảnh đại diện -->
+    <meta property="og:url" content="https://dieuphoi.netlify.app/">
+    <meta property="og:type" content="website">
+    
+    <!-- Tích hợp Icon & Font -->
+    <link rel="icon" href="icons/kettle.png" type="image/png">
+    <link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="../cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    
+    <!-- Nhúng file Style CSS được tách riêng -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Định dạng chuẩn cho các nút Menu Tab */
+        .menu-tab-item {
+            color: var(--text-color);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px; /* Tạo vùng đệm để lớp phủ nền bung ra đẹp hơn */
+            border-radius: 6px; /* Bo góc mềm mại */
+            text-decoration: none !important; /* Tiêu diệt triệt để lỗi gạch chân */
+            transition: all 0.2s ease; /* Hiệu ứng chuyển màu mượt mà */
+        }
+
+        /* Trạng thái khi di chuột vào (Hover) */
+        .menu-tab-item:hover {
+            background-color: rgba(201, 81, 23, 0.15); /* Lớp phủ màu cam mờ 15% */
+            color: #c95117 !important; /* Chữ đổi sang cam cho tone-sur-tone */
+            text-decoration: none !important;
+        }
+
+        /* Trạng thái Tab đang được chọn (Active) */
+        .menu-tab-item.active {
+            color: var(--primary-color);
+        }
+
+        /* Tùy chỉnh TomSelect cho ăn khớp với Dark/Light Mode của hệ thống */
+        .ts-control { background: var(--bg-color) !important; border-color: var(--border-color) !important; color: var(--text-color) !important; padding: 10px !important; border-radius: 6px !important; font-size: 14px; }
+        .ts-dropdown { background: var(--card-bg) !important; color: var(--text-color) !important; border-color: var(--border-color) !important; z-index: 999999 !important;}
+        .ts-dropdown .option { padding: 8px 12px; }
+        .ts-dropdown .active { background-color: rgba(201, 81, 23, 0.1) !important; color: var(--primary-color) !important; }
+        .ts-control input { color: var(--text-color) !important; }
+    </style>
+
+</head>
+<body>
+    <!-- 1. Thanh Menu trên cùng -->
+    <nav class="navbar">
+        <div class="container-inner">
+            <div class="brand-container">
+                <img src="icons/Logo CCHC.png" alt="Logo Cải cách hành chính" class="cchc-logo" id="logo-img">
+                <div class="brand-text">
+                    <div class="brand-title">ĐIỀU PHỐI DVC SIÊU TỐC</div>
+                    <div class="brand-subtitle">Hệ thống truy cập nhanh thủ tục hành chính</div>
+                </div>
+            </div>
+            
+            <ul class="nav-links">
+                <!-- Cụm thông tin Hệ thống (Giờ, Tỉnh, Cơ quan) -->
+                <li class="tn-clock-nav" style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-right: 15px;">
+                    
+                    <!-- Dòng 1: Giờ + Ngày tháng năm (Đã căn chuẩn baseline và font) -->
+                    <div style="display: flex; align-items: baseline; gap: 8px;">
+                        <span id="clock-time" style="font-size: 15px; font-weight: 700; color: var(--primary-color);">00:00:00</span>
+                        <span style="color: #cbd5e1; font-size: 13px;">|</span>
+                        <span id="clock-date" style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">ĐANG TẢI...</span>
+                    </div>
+                    
+                    <!-- Dòng 2: Tỉnh/Thành phố -->
+                    <div id="fav-province-badge" style="display:none; font-size: 11px; font-weight: 700; color: #fff; background: #ea580c; padding: 3px 8px; border-radius: 4px;"></div>
+                    
+                    <!-- Dòng 3: Cơ quan mặc định (Chỉ hiển thị tên) -->
+                    <div id="default-agency-badge" style="display:none; font-size: 12px; font-weight: 600; color: var(--primary-color); background: rgba(201, 81, 23, 0.08); border: 1px dashed rgba(201, 81, 23, 0.4); padding: 4px 8px; border-radius: 4px; text-align: right; line-height: 1.4; max-width: 400px;"></div>
+                </li>
+                <!-- Các Nút thao tác -->
+<li><button class="btn-fav-province" onclick="app.openProvinceModal()"><i class="fa-solid fa-gear"></i> Cấu hình</button></li>
+                <li><button class="btn-sync" onclick="app.forceSync()"><i class="fa-solid fa-rotate"></i> Làm mới</button></li>
+                <li><button id="theme-toggle" onclick="app.toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i> Dark mode</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 2. Banner chính & Thanh tìm kiếm -->
+    <div class="hero-banner">
+        <div class="container-inner banner-content">
+            <div class="search-wrapper">
+                <input type="text" id="search-box" placeholder="Nhập mã hoặc tên thủ tục để tìm kiếm...">
+                <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Thanh Tab Điều Hướng & Công cụ nhanh -->
+    <div class="breadcrumb-bar">
+        <div class="container-inner" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+           
+            <!-- Nhóm bên trái (Các menu tab) -->
+            <div id="breadcrumb-tabs" class="breadcrumb" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                
+                <!-- SỬ DỤNG HASH ĐỂ ĐIỀU HƯỚNG VÀ BỎ SỰ KIỆN ONCLICK -->
+                <a href="index.html" id="nav-dvc" class="menu-tab-item active">
+                    <i class="fa-solid fa-house"></i> Dịch vụ công
+                </a>
+                
+                <a href="index.html" id="nav-tacnghiep" class="menu-tab-item">
+                    <i class="fa-solid fa-briefcase"></i> Tác nghiệp nội bộ
+                </a>
+                
+                <a href="eforms/index.html" target="_blank" class="menu-tab-item">
+                    <i class="fa-solid fa-file-signature"></i> Biểu mẫu (E-Form)
+                </a>
+                
+                <a href="index.html" id="nav-thongke" class="menu-tab-item">
+                    <i class="fa-solid fa-chart-pie"></i> Thống kê
+                </a>    
+
+                <a href="index.html" id="nav-huongdan" class="menu-tab-item">
+                    <i class="fa-solid fa-clapperboard"></i> Video hướng dẫn
+                </a>
+            </div>
+
+            <!-- Nhóm bên phải (Công cụ nhanh) -->
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <!-- Ô XANH: Công tắc Ẩn danh -->
+                <button id="btn-quick-incognito" onclick="app.toggleIncognito()" style="background: var(--bg-color); border: 1px solid var(--border-color); color: #64748b; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                    <i class="fa-solid fa-user-secret"></i> <span>Nộp ẩn danh: TẮT</span>
+                </button>
+
+                <!-- Ô ĐỎ: Nút Cấu hình Lĩnh vực -->
+                <!-- NÚT CƠ QUAN MẶC ĐỊNH MỚI -->
+                <button onclick="app.openAgencyModal()" style="background: var(--card-bg); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(201,81,23,0.1);">
+                    <i class="fa-solid fa-building-flag"></i> Cơ quan mặc định
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Thanh điều hướng phụ (Hiển thị khi bấm vào sâu bên trong) -->
+        <div class="container-inner">
+            <div id="breadcrumb-sub" class="breadcrumb" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-color); color: var(--primary-color); font-size: 13px; line-height: 1.5;"></div>
+        </div>
+    </div>
+
+    <!-- 4. Nội dung chính -->
+     <div class="container-inner" style="padding-bottom: 80px;">
+    <!-- KHỐI SKELETON LOADING MỚI -->
+        <div id="loading" style="display: none; padding-top: 20px;">
+            <div id="loading-text" style="text-align: center; font-weight: 700; color: var(--primary-color); margin-bottom: 25px; font-size: 15px;">
+                Đang đồng bộ dữ liệu từ hệ thống...
+            </div>
+            
+            <!-- Tạo 6 khung xương giả lập các thẻ Lĩnh vực -->
+            <div class="skeleton-grid">
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            </div>
+        </div>
+
+        
+        <!-- Layout 1: Cổng DVC -->
+        <div id="content-grid" class="grid-container" style="display: none;"></div>
+       
+        <!-- Layout Thủ tục thường dùng -->
+        <div id="favorites-section" style="display: none; margin-top: 35px;">
+            <div class="tn-group-title" style="color: var(--donate-color);">
+                <i class="fa-solid fa-star"></i> Thủ tục thường dùng
+            </div>
+            <div id="favorites-grid" class="list-container"></div>
+        </div>
+        
+        <!-- Layout 2: Tác nghiệp nội bộ -->
+        <div id="tacnghiep-section" style="display: none;">
+            <div id="tacnghiep-grid"></div>
+        </div>
+
+        <!-- Layout 4: Thư viện Hướng dẫn sử dụng -->
+        <div id="huongdan-section" style="display: none; margin-top: 15px;">
+            <div class="tn-group-title" style="color: var(--primary-color); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px;">
+                <i class="fa-solid fa-photo-film"></i> Thư viện Video Hướng dẫn thao tác
+            </div>
+            
+            <!-- Khung chứa danh sách video -->
+            <div id="huongdan-grid" class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+            </div>
+        </div>
+
+     <!-- Layout 3: Donate -->
+        <div id="donate-section" class="donate-card" style="display: none;"></div>
+
+        <!-- Layout 5: Báo cáo Thống kê Dữ liệu -->
+        <div id="thongke-section" style="display: none; margin-top: 15px;">
+            <!-- DASHBOARD THỐNG KÊ TỈNH (Giao diện Mix: Modern Cards & Minimalist Gradient) -->
+            <div id="province-stats-dashboard" style="display: none; margin-bottom: 25px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; width: 100%;">
+            
+            <!-- HEADER -->
+            <div style="padding: 15px 25px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                
+                <!-- TIÊU ĐỀ + THỜI GIAN CẬP NHẬT -->
+                <h3 style="margin: 0; font-size: 15px; color: var(--text-color); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <div><i class="fa-solid fa-chart-pie" style="color: #3b82f6; margin-right: 5px;"></i> Thống kê Dịch vụ công</div>
+                    
+                    <!-- Khối hiển thị thời gian -->
+                    <div id="last-update-time" style="font-size: 12px; font-weight: 500; font-style: italic; color: #94a3b8; text-transform: none; letter-spacing: 0; padding-left: 5px; border-left: 1px solid #e2e8f0;">
+                        (Đang đồng bộ...)
+                    </div>
+                </h3>
+                
+                <!-- 2 NÚT TẢI EXCEL -->
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="app.exportExcelData('tinh')" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; display: flex; align-items: center; gap: 6px;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+                        <i class="fa-solid fa-file-excel"></i> Tải DS Cấp Tỉnh
+                    </button>
+                    <button onclick="app.exportExcelData('xa')" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; display: flex; align-items: center; gap: 6px;" onmouseover="this.style.background='#d1fae5'" onmouseout="this.style.background='#ecfdf5'">
+                        <i class="fa-solid fa-file-excel"></i> Tải DS cấp Xã
+                    </button>
+                </div>
+            </div>
+            
+            <!-- KHỐI 3 THẺ NỔI ĐỘC LẬP -->
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; width: 100%; padding: 25px; box-sizing: border-box;">
+                
+                <!-- Thẻ 1: Tổng số -->
+                <div style="flex: 1; min-width: 250px; background: #ffffff; border-radius: 16px; padding: 25px; position: relative; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                    <i class="fa-solid fa-layer-group" style="position: absolute; right: -15px; bottom: -15px; font-size: 100px; color: #94a3b8; opacity: 0.1; transform: rotate(-10deg);"></i>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; position: relative; z-index: 2;">
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);"></div>
+                        <div style="font-size: 13px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Tổng số DVC</div>
+                    </div>
+                    
+                    <!-- BẤM VÀO SỐ NÀY ĐỂ XEM MỨC ĐỘ CỦA TOÀN BỘ -->
+                    <div id="stat-total-proc" onclick="app.changeStatFilter('all')" title="Bấm để xem Mức độ của Tổng số thủ tục" style="cursor: pointer; font-size: 36px; font-weight: 900; background: linear-gradient(135deg, #1e293b, #475569); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; z-index: 2; display: inline-block;">0</div>
+                </div>
+                
+                <!-- Thẻ 2: Cấp Tỉnh/Xã -->
+                <div style="flex: 1; min-width: 250px; background: #ffffff; border-radius: 16px; padding: 25px; position: relative; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                    <i class="fa-solid fa-building-columns" style="position: absolute; right: -15px; bottom: -15px; font-size: 100px; color: #f59e0b; opacity: 0.1; transform: rotate(-10deg);"></i>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; position: relative; z-index: 2;">
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);"></div>
+                        <div style="font-size: 13px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">DVC Cấp Tỉnh / Cấp Xã</div>
+                    </div>
+                    
+                    <div style="font-size: 28px; font-weight: 800; position: relative; z-index: 2;">
+                        <!-- BẤM VÀO SỐ NÀY ĐỂ LỌC THEO CẤP TỈNH -->
+                        <span id="stat-captinh" onclick="app.changeStatFilter('tinh')" title="Bấm để lọc mức độ DVC Cấp Tỉnh" style="cursor: pointer; background: linear-gradient(135deg, #ea580c, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">0</span>
+                        <span style="color: #e2e8f0; font-weight: 300; margin: 0 8px;">/</span>
+                        <!-- BẤM VÀO SỐ NÀY ĐỂ LỌC THEO CẤP XÃ -->
+                        <span id="stat-capxa" onclick="app.changeStatFilter('xa')" title="Bấm để lọc mức độ DVC Cấp Xã" style="cursor: pointer; background: linear-gradient(135deg, #ea580c, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">0</span>
+                    </div>
+                </div>
+                
+                <!-- Thẻ 3: Mức độ -->
+                <div style="flex: 1; min-width: 250px; background: #ffffff; border-radius: 16px; padding: 25px; position: relative; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                    <i class="fa-solid fa-bolt" style="position: absolute; right: 5px; bottom: -10px; font-size: 110px; color: #10b981; opacity: 0.1; transform: rotate(-5deg);"></i>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; position: relative; z-index: 2;">
+                        <div id="dot-toantrinh-motphan" style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); transition: 0.3s;"></div>
+                        <!-- TIÊU ĐỀ SẼ TỰ ĐỘNG THAY ĐỔI -->
+                        <div id="label-toantrinh-motphan" style="font-size: 13px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s;">Toàn trình / Một phần</div>
+                    </div>
+                    
+                    <div style="font-size: 28px; font-weight: 800; position: relative; z-index: 2;">
+                        <span id="stat-toantrinh" style="background: linear-gradient(135deg, #059669, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; transition: 0.3s;">0</span>
+                        <span style="color: #e2e8f0; font-weight: 300; margin: 0 8px;">/</span>
+                        <span id="stat-motphan" style="background: linear-gradient(135deg, #059669, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; transition: 0.3s;">0</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+            <!-- BẢNG TRA CỨU DỮ LIỆU CHI TIẾT (Modern Table) -->
+        <div id="advanced-search-dashboard" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box;">
+            
+            <!-- Style nội bộ cho Bảng để đảm bảo độ mượt -->
+            <style>
+                .modern-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; text-align: left; }
+                .modern-table thead th { background: #f8fafc; color: #475569; font-weight: 700; padding: 14px 15px; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; white-space: nowrap;}
+                .modern-table tbody td { padding: 14px 15px; border-bottom: 1px solid #f1f5f9; color: var(--text-color); vertical-align: middle; }
+                .modern-table tbody tr { transition: all 0.2s ease; }
+                .modern-table tbody tr:hover { background-color: #f8fafc; box-shadow: inset 3px 0 0 var(--primary-color); }
+                .badge { padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; display: inline-block; white-space: nowrap; }
+                .badge-tt { background: #d1fae5; color: #059669; }
+                .badge-mp { background: #fef3c7; color: #d97706; }
+                .badge-tinh { background: #dbeafe; color: #2563eb; }
+                .badge-xa { background: #f3e8ff; color: #9333ea; }
+                .page-btn { padding: 6px 12px; border: 1px solid #e2e8f0; background: #fff; border-radius: 6px; cursor: pointer; color: #64748b; font-weight: 600; font-size: 13px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; min-width: 32px;}
+                .page-btn:hover:not(:disabled) { background: #f1f5f9; color: var(--primary-color); border-color: #cbd5e1; }
+                .page-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+                .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+            </style>
+
+            <h3 style="margin: 0 0 20px 0; font-size: 16px; color: var(--text-color); display: flex; align-items: center; gap: 8px; font-weight: 700; text-transform: uppercase;">
+                <i class="fa-solid fa-table-list" style="color: #f59e0b;"></i> Danh mục Thủ tục hành chính
+            </h3>
+
+            <!-- Khu vực Filter (Đã chia 2 hàng chuyên nghiệp) -->
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+                
+                <!-- Hàng 1: Thanh tìm kiếm & Các nút thao tác -->
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <div style="flex: 1; position: relative;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                        <input type="text" id="tk-search-input" oninput="app.filterTableData()" placeholder="Nhập mã hoặc tên thủ tục hành chính để tìm kiếm..." style="width: 100%; padding: 11px 12px 11px 40px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14.5px; box-sizing: border-box; transition: 0.2s; background: #f8fafc; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);">
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <!-- Nút Đặt lại (Tone xám trung tính) -->
+                        <button onclick="app.resetTableFilters()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 11px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; white-space: nowrap;" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
+                            <i class="fa-solid fa-rotate-right"></i> Đặt lại
+                        </button>
+                        
+                        <!-- Nút Tải danh sách Excel (Màu xanh lá đặc trưng) -->
+                        <button onclick="app.exportFilteredTableToExcel()" style="background: #10b981; color: #fff; border: none; padding: 11px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2), 0 2px 4px -1px rgba(16, 185, 129, 0.1); white-space: nowrap;" onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
+                            <i class="fa-solid fa-file-excel"></i> Tải danh sách
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hàng 2: Bốn bộ lọc dropdown CÓ GẮN NHÃN (Label) -->
+                <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                    
+                    <!-- Filter Cơ quan -->
+                    <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 6px;">
+                        <label for="tk-filter-cqcb" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Cơ quan công bố</label>
+                        <select id="tk-filter-cqcb" onchange="app.handleCqcbChange()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer; text-overflow: ellipsis;">
+                            <option value="">-- Tất cả --</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Lĩnh vực -->
+                    <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 6px;">
+                        <label for="tk-filter-linhvuc" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Lĩnh vực</label>
+                        <select id="tk-filter-linhvuc" onchange="app.filterTableData()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer; text-overflow: ellipsis;">
+                            <option value="">-- Tất cả --</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Cấp thực hiện -->
+                    <div style="flex: 1; min-width: 130px; display: flex; flex-direction: column; gap: 6px;">
+                        <label for="tk-filter-cap" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Cấp thực hiện</label>
+                        <select id="tk-filter-cap" onchange="app.filterTableData()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                            <option value="">-- Tất cả --</option>
+                            <option value="Tỉnh">Cấp Tỉnh</option>
+                            <option value="Xã">Cấp Xã</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Mức độ -->
+                    <div style="flex: 1; min-width: 130px; display: flex; flex-direction: column; gap: 6px;">
+                        <label for="tk-filter-mucdo" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Mức độ DVC</label>
+                        <select id="tk-filter-mucdo" onchange="app.filterTableData()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                            <option value="">-- Tất cả --</option>
+                            <option value="Toàn trình">Toàn trình</option>
+                            <option value="Một phần">Một phần</option>
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- Khung Bảng (Đã chia lại tỷ lệ cột) -->
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow-x: auto; background: #fff;">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 45px; text-align: center;">STT</th>
+                            <!-- Cột Mã TTHC thu hẹp tối đa -->
+                            <th style="width: 85px; text-align: center;">Mã TTHC</th> 
+                            <!-- Cột Tên TTHC được cấp 45% diện tích màn hình để hiển thị đẹp nhất -->
+                            <th style="width: 45%; min-width: 350px;">Tên Thủ tục hành chính</th> 
+                            <th style="width: 15%;">Lĩnh vực</th>
+                            <th style="width: 15%;">Cơ quan công bố</th>
+                            <th style="width: 110px; text-align: center;">Cấp thực hiện</th>
+                            <th style="width: 100px; text-align: center;">Mức độ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tk-table-body">
+                        <!-- Đổ dữ liệu bằng JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; flex-wrap: wrap; gap: 10px;">
+                <div id="tk-table-info" style="font-size: 13px; color: #64748b; font-weight: 500;">
+                    Đang hiển thị 0 đến 0 của 0 bản ghi
+                </div>
+                <div id="tk-table-pagination" style="display: flex; gap: 6px;">
+                    <!-- Nút phân trang -->
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </div> <!-- ĐÂY LÀ THẺ ĐÓNG CỦA CONTAINER-INNER (Nằm dưới cùng) -->
+
+    <button class="fab-donate" onclick="app.showDonate()">
+        <i class="fa-solid fa-mug-saucer"></i> Mời cà phê tác giả
+    </button>
+
+    <!-- HỘP THOẠI CHỌN TỈNH YÊU THÍCH -->
+    <div id="setupWizardModalOverlay" class="modal-overlay">
+        <div class="modal-box" style="max-width: 600px; width: 95%;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <span class="modal-subtitle">Hệ thống Điều phối Siêu tốc</span>
+                    <h3 class="modal-title"><i class="fa-solid fa-gear"></i> Cấu hình hệ thống</h3>
+                </div>
+                <button class="close-btn" id="wizard-close-btn" onclick="app.closeWizard()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 20px; max-height: 65vh; overflow-y: auto; padding-right: 5px;">
+                
+                <div class="setup-section">
+                    <label style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--primary-color);">1. Chọn Tỉnh/Thành phố:</label>
+                    <div style="position: relative;">
+                        <div style="display: flex; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); overflow: hidden;">
+                            <input type="text" id="wizard-province-search" placeholder="Nhập để tìm hoặc bấm mũi tên bên phải để chọn..." onkeyup="app.filterWizardProvinces()" onclick="app.toggleProvinceDropdown(event, true)" style="flex: 1; border: none; padding: 10px; font-size: 14px; background: transparent; color: var(--text-color); outline: none;">
+                            <button onclick="app.toggleProvinceDropdown(event, false)" style="background: #f1f5f9; border: none; border-left: 1px solid var(--border-color); padding: 0 15px; cursor: pointer; color: #64748b; transition: background 0.2s; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div id="wizard-province-dropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; max-height: 250px; overflow-y: auto; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; z-index: 10001; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-top: 4px;">
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="setup-section" id="wizard-fields-section" style="opacity: 0.5; pointer-events: none; transition: all 0.3s;">
+    <label style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--primary-color);">2. Cấu hình Lĩnh vực thường dùng:</label>
+    
+    <select id="wizard-dept-filter" onchange="app.filterWizardFields()" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; margin-bottom: 12px; background: var(--card-bg); color: var(--text-color);">
+        <option value="">-- Tất cả Bộ/Ngành &amp; Đặc thù --</option>
+    </select>
+
+    <div style="margin-bottom: 12px;">
+        <div style="position: relative; display: flex; align-items: center;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; color: #94a3b8;"></i>
+            
+            <input type="text" id="wizard-search-lv-input" oninput="app.searchWizardFields()" placeholder="Tìm nhanh lĩnh vực (VD: đất đai, tư pháp...)" style="width: 100%; padding: 10px 35px 10px 35px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); color: var(--text-color); font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;">
+            
+            <button type="button" id="wizard-btn-clear-search" onclick="app.clearWizardSearch()" style="display: none; position: absolute; right: 8px; background: none; border: none; color: #64748b; cursor: pointer; padding: 5px;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+    <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px; padding-left: 5px;">
+        <input type="checkbox" id="wizard-select-all" onchange="app.toggleAllWizardFields(this)">
+        <label for="wizard-select-all" style="font-weight: 700; cursor: pointer; color: var(--text-color); font-size: 14px;">Chọn/Bỏ chọn tất cả lĩnh vực</label>
+    </div>
+    
+<div id="wizard-fields-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; height: 180px; align-content: start; overflow-y: auto; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+
+</div>
+</div>
+
+                <div class="setup-section">
+                    <label style="font-weight: 700; display: block; margin-bottom: 6px; font-size: 13px; color: #64748b;">Lĩnh vực đã chọn:</label>
+                    <div id="wizard-selected-tags" style="display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; min-height: 40px; max-height: 180px; overflow-y: auto; padding: 10px; border: 1px dashed var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        <span style="color: #94a3b8; font-size: 13px; font-style: italic;">Chưa chọn lĩnh vực nào...</span>
+                    </div>
+                </div>
+            </div>
+
+<!-- Bổ sung tính năng Nộp ẩn danh và Nút tải Extension -->
+<div style="margin-top: 10px; padding: 8px 10px; background-color: #fef3c7; border: 1px dashed #f59e0b; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+    
+    <!-- Nhãn Checkbox -->
+    <label style="display: flex; align-items: center; cursor: pointer; margin: 0; flex: 1;">
+        <input type="checkbox" id="wizard-incognito-mode" style="width: 16px; height: 16px; margin-right: 8px; accent-color: #d97706; flex-shrink: 0;">
+        <span style="font-weight: 600; color: #92400e; font-size: 13.5px; line-height: 1.4;">
+            Chế độ ẩn danh nộp hộ công dân (Yêu cầu cài Extension hỗ trợ)
+        </span>
+    </label>
+    
+    <!-- Nút Tải Extension (Đã làm to hơn và không bị xuống dòng) -->
+    <a href="https://raw.githubusercontent.com/ChippedTopaz/dieu-phoi/main/TroLyNopHo_Extension.zip" target="_blank" style="font-size: 12.5px; font-weight: bold; background: #d97706; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; display: flex; align-items: center; gap: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); transition: opacity 0.2s; flex-shrink: 0; white-space: nowrap;">
+        <i class="fa-solid fa-download"></i> Tải Extension
+    </a>
+</div>
+
+            <div style="margin-top: 25px; display: flex; gap: 10px;">
+                <button onclick="app.saveWizardConfig()" style="flex: 1; background: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; transition: background 0.2s;">
+                    <i class="fa-solid fa-floppy-disk"></i> LƯU CẤU HÌNH
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tnConfigModalOverlay" class="modal-overlay">
+        <div class="modal-box" style="max-width: 600px; width: 95%;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <span class="modal-subtitle">Cá nhân hóa</span>
+                    <h3 class="modal-title"><i class="fa-solid fa-sliders"></i> Cấu hình phần mềm công việc</h3>
+                </div>
+                <button class="close-btn" onclick="app.closeTnConfig()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" id="tn-config-body" style="max-height: 60vh; overflow-y: auto; padding-right: 5px; display: flex; flex-direction: column; gap: 15px;">
+            </div>
+            
+            <div style="margin-top: 25px; display: flex; gap: 10px;">
+                <button onclick="app.saveTnConfig()" style="flex: 1; background: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; transition: background 0.2s;">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu tùy chỉnh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HỘP THOẠI BÁO CÁO LỖI (MODAL CUSTOM) -->
+    <div id="reportErrorModalOverlay" class="modal-overlay">
+        <div class="modal-box" style="max-width: 450px; width: 95%;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Báo cáo link lỗi</h3>
+                </div>
+                <button class="close-btn" onclick="app.closeReportModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px;">
+                <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 12px; border-radius: 8px;">
+                    <strong style="color: #b91c1c; font-size: 13px;">Tên thủ tục:</strong>
+                    <div id="report-proc-name" style="color: #991b1b; font-size: 14px; margin-top: 4px; font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;"></div>
+                </div>
+                
+                <div>
+                    <label for="report-error-desc" style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--text-color); font-size: 13.5px;">Mô tả chi tiết lỗi (Không bắt buộc):</label>
+                    <textarea id="report-error-desc" rows="4" placeholder="Ví dụ: Báo lỗi 404, Không truy cập được, Sai cơ quan thực hiện..." style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); color: var(--text-color); font-size: 14px; font-family: inherit; outline: none; resize: vertical; box-sizing: border-box; transition: border-color 0.2s;"></textarea>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px; display: flex; gap: 10px;">
+                <button onclick="app.closeReportModal()" style="flex: 1; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14.5px; transition: all 0.2s;">
+                    Hủy bỏ
+                </button>
+                <button id="btn-submit-report" style="flex: 1; background: #ef4444; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14.5px; transition: opacity 0.2s;">
+                    <i class="fa-solid fa-paper-plane"></i> Gửi báo cáo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HỘP THOẠI PHÁP LÝ (LEGAL MODAL) -->
+    <div id="legalModalOverlay" class="modal-overlay">
+        <div class="modal-box" style="max-width: 550px; width: 95%;">
+            <div class="modal-header" style="margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" id="legal-modal-title" style="color: var(--primary-color);"></h3>
+                </div>
+                <button class="close-btn" onclick="document.getElementById('legalModalOverlay').classList.remove('active')" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" id="legal-modal-content" style="font-size: 14.5px; line-height: 1.6; color: var(--text-color); text-align: justify; max-height: 60vh; overflow-y: auto; padding-right: 5px;">
+                <!-- Nội dung tự động đổ bằng Javascript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Nhúng thư viện ngoài và các file Javascript phân hệ V2 -->
+    <script src="../cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="../cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script src="../cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/ui-renderer.js"></script>
+    <script src="js/main.js"></script>
+
+    <footer class="main-footer">
+        <div class="container-inner footer-content">
+            
+            <!-- Cột 1: Giới thiệu & Cam kết -->
+            <div class="footer-col brand-col">
+                <div class="footer-logo-wrapper">
+                    <span class="footer-brand-title">ĐIỀU PHỐI DVC SIÊU TỐC</span>
+                </div>
+                
+                <!-- Đi thẳng vào thông điệp cam kết an toàn để tiết kiệm không gian -->
+                <p class="footer-desc">
+                    <strong><i class="fa-solid fa-shield-halved" style="color: var(--primary-color);"></i> Cam kết an toàn:</strong> Hệ thống hoạt động 100% độc lập trên trình duyệt (Client-side). Chúng tôi tuyệt đối <strong>KHÔNG</strong> thu thập, lưu trữ hay can thiệp vào bất kỳ dữ liệu cá nhân nào của người dùng.
+                </p>
+            </div>
+
+            <!-- Cột 2: Thống kê (Giữ nguyên độ sắc nét) -->
+            <div class="footer-col stats-col">
+                <h4 class="footer-col-title"><i class="fa-solid fa-chart-line"></i> Thống kê hệ thống</h4>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Trực tuyến:</span>
+                        <span class="stat-val online-status">
+                            <span class="online-dot"></span> <span id="stat-online">--</span>
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Truy cập hôm nay:</span>
+                        <span class="stat-val" id="stat-today-visits">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Tổng lượt sử dụng:</span>
+                        <span class="stat-val" id="stat-total-clicks">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột 3: Liên kết, Pháp lý & Phiên bản -->
+            <div class="footer-col links-col">
+                <h4 class="footer-col-title"><i class="fa-solid fa-link"></i> Liên kết &amp; Pháp lý</h4>
+                
+                <ul class="footer-links" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 15px;">
+                    <!-- Hàng 1 -->
+                    <li><a href="javascript:void(0)" onclick="app.showLegalModal('terms')">Điều khoản sử dụng</a></li>
+                    <li><a href="javascript:void(0)" onclick="app.showLegalModal('disclaimer')">Miễn trừ trách nhiệm</a></li>
+                    
+                    <!-- Hàng 2 -->
+                    <li><a href="javascript:void(0)" onclick="app.showLegalModal('privacy')">Chính sách bảo mật</a></li>
+                    <li>
+                        <a href="index.html" onclick="app.showDonate()" style="color: var(--donate-color);">
+                            <i class="fa-solid fa-mug-saucer"></i> Mời cà phê tác giả
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Nhãn phiên bản được chuyển sang đây, ép nằm sát đáy cột -->
+                <div class="footer-version" style="margin-top: auto;">Phiên bản V2.3.0-Release</div>
+            </div>
+            
+        </div>
+        
+        <!-- Đáy trang cực kỳ tối giản -->
+        <div class="footer-bottom">
+            <div class="container-inner">
+                <p>© 2026 Hệ thống Điều phối DVC Siêu tốc - Vì một nền hành chính minh bạch, hiệu quả</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- HỘP THOẠI ĐIỀU KHOẢN SỬ DỤNG BẮT BUỘC (TERMS MODAL) -->
+    <div id="mandatoryTermsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: var(--card-bg); max-width: 700px; width: 92%; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; max-height: 85vh;">
+            
+            <!-- Tiêu đề -->
+            <div style="padding: 20px 25px; border-bottom: 1px solid var(--border-color); background: var(--bg-color); text-align: center;">
+                <h3 style="margin: 0; color: var(--primary-color); font-size: 17px; font-weight: 700; text-transform: uppercase;">
+                    ĐIỀU KHOẢN SỬ DỤNG
+                </h3>
+                <div style="font-size: 13px; color: #64748b; font-weight: 600; margin-top: 4px;">Hệ thống Điều phối DVC Siêu tốc</div>
+            </div>
+            
+            <!-- Nội dung điều khoản (Đúng chuẩn văn bản hành chính) -->
+            <div style="padding: 20px 25px; overflow-y: auto; font-size: 13.5px; line-height: 1.6; color: var(--text-color); text-align: justify;">
+                <p style="margin-top: 0; font-weight: 500;">Trước khi sử dụng Hệ thống Điều phối DVC Siêu tốc, anh/chị vui lòng xác nhận đã đọc, hiểu và đồng ý tuân thủ các điều khoản sau:</p>
+                
+                <div style="margin-bottom: 12px;">
+                    <strong>1. Phạm vi sử dụng và dữ liệu cá nhân</strong><br>
+                    Hệ thống được xây dựng nhằm hỗ trợ người dùng truy cập nhanh các dịch vụ công trực tuyến. Hệ thống không yêu cầu người dùng cung cấp, đồng thời không thu thập, lưu trữ hoặc quản lý dữ liệu cá nhân, thông tin hồ sơ hay dữ liệu nghiệp vụ của công dân trên hệ thống.
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <strong>2. Thông tin và thiết lập người dùng</strong><br>
+                    Các thông tin thiết lập phục vụ việc cá nhân hóa trong quá trình sử dụng, như Tỉnh/Thành phố và cấu hình lĩnh vực thủ tục hành chính được lưu trữ cục bộ trên trình duyệt của thiết bị người dùng. Người dùng có trách nhiệm quản lý và bảo mật thiết bị của mình.
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <strong>3. Giới hạn trách nhiệm</strong><br>
+                    Hệ thống chỉ cung cấp công cụ và đường dẫn trung gian để hỗ trợ người dùng truy cập các hệ thống, Cổng Dịch vụ công có liên quan. Hệ thống không chịu trách nhiệm đối với tình trạng hoạt động, tính chính xác, tính đầy đủ, khả năng truy cập hoặc các sự cố phát sinh từ các hệ thống, máy chủ và dịch vụ do bên thứ ba quản lý.
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <strong>4. Trách nhiệm của người sử dụng</strong><br>
+                    Người dùng chịu trách nhiệm về việc sử dụng hệ thống đúng mục đích, tuân thủ các quy định pháp luật và quy định của cơ quan, đơn vị có thẩm quyền; đồng thời tự chịu trách nhiệm về tính chính xác của các thao tác nghiệp vụ được thực hiện và có trách nhiệm bảo mật tài khoản, thông tin xác thực của mình.
+                </div>
+                
+                <div>
+                    <strong>5. Chấp thuận điều khoản</strong><br>
+                    Bằng việc lựa chọn “Tôi đồng ý và tiếp tục”, anh/chị xác nhận đã đọc, hiểu và đồng ý với các điều khoản sử dụng nêu trên.
+                </div>
+            </div>
+            
+            <!-- Khu vực xác nhận -->
+            <div style="padding: 20px 25px; border-top: 1px solid var(--border-color); background: var(--bg-color); display: flex; flex-direction: column; gap: 15px;">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--text-color);">
+                    <input type="checkbox" id="agreeTermsCheckbox" onchange="app.toggleAgreeButton()" style="margin-top: 3px; width: 18px; height: 18px; accent-color: var(--primary-color); cursor: pointer;">
+                    <span>Tôi đồng ý và tiếp tục (Xác nhận đã đọc, hiểu và đồng ý với các điều khoản sử dụng nêu trên)</span>
+                </label>
+                
+                <button id="btnAgreeTerms" onclick="app.acceptTerms()" disabled="" style="background: #94a3b8; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 700; font-size: 15px; cursor: not-allowed; transition: 0.2s; width: 100%;">
+                    TRUY CẬP HỆ THỐNG
+                </button>
+            </div>
+                        
+        </div>
+    </div>
+    
+    <!-- HỘP THOẠI CẤU HÌNH CƠ QUAN MẶC ĐỊNH (MODAL MỚI ĐỘC LẬP) -->
+    <div id="agencyConfigModalOverlay" class="modal-overlay">
+        <div class="modal-box" style="max-width: 500px; width: 95%;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <span class="modal-subtitle">Cá nhân hóa Siêu tốc</span>
+                    <h3 class="modal-title"><i class="fa-solid fa-building-flag"></i> Cơ quan mặc định</h3>
+                </div>
+                <button class="close-btn" onclick="app.closeAgencyModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" style="padding-top: 10px;">
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700; color: var(--primary-color);">
+                        Chọn cơ quan thực hiện thủ tục thường xuyên:
+                    </label>
+                    <select id="default-agency-select" class="form-control" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); outline: none;">
+                        <option value="">-- Vui lòng chọn Tỉnh/TP và chờ dữ liệu được tải về trước --</option>
+                    </select>
+                    <small style="color: #64748b; margin-top: 12px; display: block; font-size: 13.5px; line-height: 1.5;">
+                        <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> Khi chọn thủ tục thuộc thẩm quyền của cơ quan này, hệ thống sẽ mở thẳng trang nộp hồ sơ mà không qua bước chọn cơ quan.
+                    </small>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px; display: flex; gap: 10px;">
+                <button onclick="app.saveAgencyConfig()" style="flex: 1; background: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; transition: background 0.2s;">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu thiết lập
+                </button>
+            </div>
+        </div>
+    </div>
+
+</body></html>
