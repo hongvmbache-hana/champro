@@ -19,7 +19,8 @@
     <meta property="og:type" content="website">
     
     <!-- Tích hợp Icon & Font -->
-    <link rel="icon" href="icons/kettle.png" type="image/png">
+    <!-- Tích hợp Icon & Font -->
+    <link rel="icon" href="../cdn.jsdelivr.net/gh/ChippedTopaz/dieu-phoi@main/kettle.png" type="image/png">
     <link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="../cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     
@@ -53,6 +54,10 @@
         }
 
         /* Tùy chỉnh TomSelect cho ăn khớp với Dark/Light Mode của hệ thống */
+        /* ĐỔI LOGO TRẮNG KHI BẬT DARK MODE */
+        body.dark-mode #logo-img {
+            content: url('../cdn.jsdelivr.net/gh/ChippedTopaz/am-sieu-toc-data@main/Logo-white.png');
+        }
         .ts-control { background: var(--bg-color) !important; border-color: var(--border-color) !important; color: var(--text-color) !important; padding: 10px !important; border-radius: 6px !important; font-size: 14px; }
         .ts-dropdown { background: var(--card-bg) !important; color: var(--text-color) !important; border-color: var(--border-color) !important; z-index: 999999 !important;}
         .ts-dropdown .option { padding: 8px 12px; }
@@ -62,11 +67,22 @@
 
 </head>
 <body>
+<!-- GIAO DIỆN OVERLAY HIỂN THỊ TIẾN TRÌNH XUẤT QR (ẨN MẶC ĐỊNH) -->
+    <div id="qrProgressOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; color: white;">
+        <i class="fa-solid fa-qrcode fa-spin" style="font-size: 40px; margin-bottom: 20px; color: #FFCB05;"></i>
+        <div style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">ĐANG TẠO MÃ QR VÀ ĐÓNG GÓI EXCEL...</div>
+        <div style="width: 400px; height: 25px; background: #334155; border-radius: 12px; overflow: hidden; border: 2px solid #64748b;">
+            <div id="qrProgressBar" style="width: 0%; height: 100%; background: #D2232A; transition: width 0.1s; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;"></div>
+        </div>
+        <div id="qrProgressText" style="margin-top: 15px; font-size: 16px; color: #cbd5e1;">0 / 0 thủ tục</div>
+        <div style="margin-top: 10px; font-size: 14px; color: #94a3b8;">Vui lòng không đóng trình duyệt trong quá trình này!</div>
+    </div>
+
     <!-- 1. Thanh Menu trên cùng -->
     <nav class="navbar">
         <div class="container-inner">
             <div class="brand-container">
-                <img src="icons/Logo CCHC.png" alt="Logo Cải cách hành chính" class="cchc-logo" id="logo-img">
+                <img src="../cdn.jsdelivr.net/gh/ChippedTopaz/dieu-phoi@main/icons/Logo CCHC.png" alt="Logo Cải cách hành chính" class="cchc-logo" id="logo-img">
                 <div class="brand-text">
                     <div class="brand-title">ĐIỀU PHỐI DVC SIÊU TỐC</div>
                     <div class="brand-subtitle">Hệ thống truy cập nhanh thủ tục hành chính</div>
@@ -116,39 +132,36 @@
             <div id="breadcrumb-tabs" class="breadcrumb" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 
                 <!-- SỬ DỤNG HASH ĐỂ ĐIỀU HƯỚNG VÀ BỎ SỰ KIỆN ONCLICK -->
-                <a href="#dvc" id="nav-dvc" class="menu-tab-item active">
+                <a href="index.html" id="nav-dvc" class="menu-tab-item active">
                     <i class="fa-solid fa-house"></i> Dịch vụ công
                 </a>
                 
-                <a href="#tac-nghiep" id="nav-tacnghiep" class="menu-tab-item">
+                <a href="index.html" id="nav-tacnghiep" class="menu-tab-item">
                     <i class="fa-solid fa-briefcase"></i> Tác nghiệp nội bộ
                 </a>
                 
-                <a href="/eforms" target="_blank" class="menu-tab-item">
-                    <i class="fa-solid fa-file-signature"></i> Biểu mẫu (E-Form)
+                <a href="eforms/index.html" target="_blank" class="menu-tab-item">
+                    <i class="fa-solid fa-file-signature"></i> Biểu mẫu
                 </a>
                 
-                <a href="#thong-ke" id="nav-thongke" class="menu-tab-item">
+                <a href="index.html" id="nav-thongke" class="menu-tab-item">
                     <i class="fa-solid fa-chart-pie"></i> Thống kê
-                </a>    
+                </a>  
 
-                <a href="#huong-dan" id="nav-huongdan" class="menu-tab-item">
-                    <i class="fa-solid fa-clapperboard"></i> Video hướng dẫn
+                <a class="menu-tab-item" href="niemyet/index.html" target="_blank">
+                    <i class="fa-solid fa-desktop"></i> Niêm yết
+                </a>
+
+                <a href="index.html" id="nav-huongdan" class="menu-tab-item">
+                    <i class="fa-solid fa-clapperboard"></i> Hướng dẫn
                 </a>
             </div>
 
             <!-- Nhóm bên phải (Công cụ nhanh) -->
             <div style="display: flex; gap: 10px; align-items: center;">
-                <!-- Ô XANH: Công tắc Ẩn danh -->
-                <button id="btn-quick-incognito" onclick="app.toggleIncognito()" style="background: var(--bg-color); border: 1px solid var(--border-color); color: #64748b; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
-                    <i class="fa-solid fa-user-secret"></i> <span>Nộp ẩn danh: TẮT</span>
-                </button>
-
-                <!-- Ô ĐỎ: Nút Cấu hình Lĩnh vực -->
-                <!-- NÚT CƠ QUAN MẶC ĐỊNH MỚI -->
-                <button onclick="app.openAgencyModal()" style="background: var(--card-bg); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(201,81,23,0.1);">
-                    <i class="fa-solid fa-building-flag"></i> Cơ quan mặc định
-                </button>
+                <a id="btn-extension-store" href="https://chromewebstore.google.com/detail/ten-extension/ckgdeilnlgobkfcilepinjoejcgjhmng" target="_blank" rel="noopener noreferrer" style="background: var(--card-bg); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(201,81,23,0.1); text-decoration: none; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-brands fa-chrome"></i> <span>Cài Extension</span>
+                </a>
             </div>
 
         </div>
@@ -207,10 +220,125 @@
         </div>
 
      <!-- Layout 3: Donate -->
-        <div id="donate-section" class="donate-card" style="display: none;"></div>
+        <div id="donate-section" class="donate-card" style="display: none;"></div>      
+
 
         <!-- Layout 5: Báo cáo Thống kê Dữ liệu -->
         <div id="thongke-section" style="display: none; margin-top: 15px;">
+
+
+                 
+
+        <!-- ========================================== -->
+        <!-- KHỐI: THỐNG KÊ THỦ TỤC HÀNH CHÍNH          -->
+        <!-- ========================================== -->
+        
+        <!-- HEADER KHỐI TTHC -->
+        <div style="display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px; margin-top: 25px;">
+            <h3 style="margin: 0; color: #1e293b; font-weight: 800; font-size: 15px; text-transform: uppercase;">
+                <i class="fa-solid fa-file-signature" style="color: #D2232A; margin-right: 6px;"></i> THỐNG KÊ THỦ TỤC HÀNH CHÍNH
+            </h3>
+            <span style="font-size: 12.5px; color: #94a3b8; font-style: italic; font-weight: 500;">
+                (Cập nhật lúc <span id="tthc-last-update-time">Đang tải...</span>)
+            </span>
+            <!-- Đặt nút này ở góc phải của Header Thống kê TTHC -->
+    <button id="btn-toggle-noibo" onclick="TTHC_App.toggleNoiBo()" style="padding: 6px 12px; border: 1px solid #10b981; background: #ecfdf5; color: #10b981; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+        <i class="fa-solid fa-toggle-on" style="font-size: 16px;"></i> <span>Tính cả TTHC Nội bộ</span>
+    </button>
+        </div>
+
+        <!-- TIỂU MỤC A: HIỆN TRẠNG TTHC -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+            <!-- Thẻ Tổng số -->
+            <div onclick="TTHC_App.exportCurrentStatsExcel('total')" title="Nhấn để tải danh sách Excel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px 20px; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.08)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.02)';">
+                <div style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #475569;"></div> TỔNG SỐ TTHC ĐANG HIỆU LỰC
+                </div>
+                <div id="tthc-stat-total" style="font-size: 26px; font-weight: 900; color: #0f172a; position: relative; z-index: 1;">0</div>
+                <i class="fa-solid fa-layer-group" style="position: absolute; right: -10px; bottom: -15px; font-size: 70px; color: #f1f5f9; z-index: 0; transform: rotate(-10deg);"></i>
+            </div>
+            
+            <!-- Thẻ Cấp Tỉnh -->
+            <div onclick="TTHC_App.exportCurrentStatsExcel('tinh')" title="Nhấn để tải danh sách Excel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px 20px; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(59, 130, 246, 0.15)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.02)';">
+                <div style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #3b82f6;"></div> THỰC HIỆN TẠI CẤP TỈNH
+                </div>
+                <div id="tthc-stat-tinh" style="font-size: 26px; font-weight: 900; color: #3b82f6; position: relative; z-index: 1;">0</div>
+                <i class="fa-solid fa-city" style="position: absolute; right: -10px; bottom: -15px; font-size: 70px; color: #eff6ff; z-index: 0; transform: rotate(-10deg);"></i>
+            </div>
+
+            <!-- Thẻ Cấp Xã -->
+            <div onclick="TTHC_App.exportCurrentStatsExcel('xa')" title="Nhấn để tải danh sách Excel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px 20px; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(16, 185, 129, 0.15)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.02)';">
+                <div style="font-size: 11.5px; color: #64748b; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></div> THỰC HIỆN TẠI CẤP XÃ
+                </div>
+                <div id="tthc-stat-xa" style="font-size: 26px; font-weight: 900; color: #10b981; position: relative; z-index: 1;">0</div>
+                <i class="fa-solid fa-house-flag" style="position: absolute; right: -10px; bottom: -15px; font-size: 70px; color: #ecfdf5; z-index: 0; transform: rotate(-10deg);"></i>
+            </div>
+        </div>
+
+        <!-- TIỂU MỤC B: BIẾN ĐỘNG THEO THỜI GIAN -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div style="font-size: 13.5px; color: #1e293b; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-chart-line" style="color: #f59e0b;"></i> THEO DÕI BIẾN ĐỘNG
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <!-- BỘ LỌC MỚI: PHẠM VI (TỈNH / TOÀN QUỐC) -->
+                <div style="display: flex; align-items: center; background: #fff; padding: 4px 6px; border-radius: 6px; border: 1px solid #cbd5e1; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                    <i class="fa-solid fa-earth-asia" style="color: #3b82f6; margin-left: 6px;"></i>
+                    <select id="tthc-scope-filter" onchange="TTHC_App.loadFluctuations()" style="border: none; outline: none; padding: 4px 10px 4px 2px; font-weight: 700; color: #1e293b; font-size: 13px; cursor: pointer; background: transparent;">
+                        <option value="tinh" selected="">Tỉnh/Thành phố</option>
+                        <option value="toanquoc">Toàn quốc</option>
+                    </select>
+                </div>
+
+                <!-- BỘ LỌC CŨ: THỜI GIAN -->
+                <div style="display: flex; align-items: center; background: #fff; padding: 4px 6px; border-radius: 6px; border: 1px solid #cbd5e1; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                    <i class="fa-regular fa-calendar" style="color: #64748b; margin-left: 6px;"></i>
+                    <select id="tthc-time-filter" onchange="TTHC_App.loadFluctuations()" style="border: none; outline: none; padding: 4px 10px 4px 2px; font-weight: 700; color: #1e293b; font-size: 13px; cursor: pointer; background: transparent;">
+                        <option value="today">Hôm nay</option>
+                        <option value="week">Tuần này</option>
+                        <option value="month" selected="">Tháng này</option>
+                        <option value="quarter">Quý này</option>
+                        <option value="year">Năm nay</option>
+                        <option value="all">Toàn bộ lịch sử</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px;">
+            <!-- Nút Ban hành mới -->
+            <div onclick="TTHC_App.showDetailList('new')" style="background: #fff; border: 1px solid #bbf7d0; border-radius: 10px; padding: 15px 20px; position: relative; overflow: hidden; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.05);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(22, 163, 74, 0.15)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 4px rgba(22, 163, 74, 0.05)';">
+                <div style="font-size: 11.5px; color: #15803d; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #16a34a;"></div> BAN HÀNH MỚI
+                </div>
+                <div id="tthc-stat-new" style="font-size: 26px; font-weight: 900; color: #16a34a; position: relative; z-index: 1;">0</div>
+                <i class="fa-solid fa-circle-plus" style="position: absolute; right: -10px; bottom: -15px; font-size: 70px; color: #dcfce3; z-index: 0; transform: rotate(-10deg);"></i>
+            </div>
+            
+            <!-- Nút Sửa đổi bổ sung -->
+            <div onclick="TTHC_App.showDetailList('amended')" style="background: #fff; border: 1px solid #bae6fd; border-radius: 10px; padding: 15px 20px; position: relative; overflow: hidden; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(2, 132, 199, 0.05);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(2, 132, 199, 0.15)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 4px rgba(2, 132, 199, 0.05)';">
+                <div style="font-size: 11.5px; color: #0369a1; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #0284c7;"></div> SỬA ĐỔI - BỔ SUNG
+                </div>
+                <div id="tthc-stat-amended" style="font-size: 26px; font-weight: 900; color: #0284c7; position: relative; z-index: 1;">0</div>
+                <i class="fa-solid fa-pen-to-square" style="position: absolute; right: -10px; bottom: -15px; font-size: 70px; color: #e0f2fe; z-index: 0; transform: rotate(-10deg);"></i>
+            </div>
+
+            <!-- Nút Bãi bỏ -->
+            <div onclick="TTHC_App.showDetailList('abolished')" style="background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 15px 20px; position: relative; overflow: hidden; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(71, 85, 105, 0.05);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(71, 85, 105, 0.15)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 4px rgba(71, 85, 105, 0.05)';">
+                <div style="font-size: 11.5px; color: #334155; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #475569;"></div> BÃI BỎ
+                </div>
+                <div id="tthc-stat-abolished" style="font-size: 26px; font-weight: 900; color: #475569; position: relative; z-index: 1;">0</div>
+                <i class="fa-solid fa-trash-can" style="position: absolute; right: -10px; bottom: -15px; font-size: 70px; color: #f1f5f9; z-index: 0; transform: rotate(-10deg);"></i>
+            </div>
+        </div>
+
+
+            <!-- KHỐI 1: THỐNG KÊ DỊCH VỤ CÔNG        -->
             <!-- DASHBOARD THỐNG KÊ TỈNH (Giao diện Mix: Modern Cards & Minimalist Gradient) -->
             <div id="province-stats-dashboard" style="display: none; margin-bottom: 25px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; width: 100%;">
             
@@ -287,12 +415,15 @@
                         <span style="color: #e2e8f0; font-weight: 300; margin: 0 8px;">/</span>
                         <span id="stat-motphan" style="background: linear-gradient(135deg, #059669, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; transition: 0.3s;">0</span>
                     </div>
-                </div>
+                </div>              
                 
             </div>
-        </div>
+        </div>   
+
+
+
             <!-- BẢNG TRA CỨU DỮ LIỆU CHI TIẾT (Modern Table) -->
-        <div id="advanced-search-dashboard" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box;">
+            <div id="advanced-search-dashboard" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box;">
             
             <!-- Style nội bộ cho Bảng để đảm bảo độ mượt -->
             <style>
@@ -304,6 +435,7 @@
                 .badge { padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; display: inline-block; white-space: nowrap; }
                 .badge-tt { background: #d1fae5; color: #059669; }
                 .badge-mp { background: #fef3c7; color: #d97706; }
+                .badge-bo { background: #fee2e2; color: #dc2626; }
                 .badge-tinh { background: #dbeafe; color: #2563eb; }
                 .badge-xa { background: #f3e8ff; color: #9333ea; }
                 .page-btn { padding: 6px 12px; border: 1px solid #e2e8f0; background: #fff; border-radius: 6px; cursor: pointer; color: #64748b; font-weight: 600; font-size: 13px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; min-width: 32px;}
@@ -313,84 +445,123 @@
             </style>
 
             <h3 style="margin: 0 0 20px 0; font-size: 16px; color: var(--text-color); display: flex; align-items: center; gap: 8px; font-weight: 700; text-transform: uppercase;">
-                <i class="fa-solid fa-table-list" style="color: #f59e0b;"></i> Danh mục Thủ tục hành chính
+                <i class="fa-solid fa-list"></i> DANH MỤC THỦ TỤC HÀNH CHÍNH 
+            <span id="national-update-time" style="font-size: 14px; font-weight: 500; color: #94a3b8; font-style: italic; text-transform: none; margin-left: 10px;">(Đang kiểm tra thời gian cập nhật...)</span>
             </h3>
 
-            <!-- Khu vực Filter (Đã chia 2 hàng chuyên nghiệp) -->
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
-                
-                <!-- Hàng 1: Thanh tìm kiếm & Các nút thao tác -->
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <div style="flex: 1; position: relative;">
-                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
-                        <input type="text" id="tk-search-input" oninput="app.filterTableData()" placeholder="Nhập mã hoặc tên thủ tục hành chính để tìm kiếm..." style="width: 100%; padding: 11px 12px 11px 40px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14.5px; box-sizing: border-box; transition: 0.2s; background: #f8fafc; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);">
-                    </div>
+            <!-- Khu vực Filter (Đã thu gọn khoảng cách và đảo vị trí Hàng 1 - Hàng 2) -->
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
                     
-                    <div style="display: flex; gap: 10px;">
-                        <!-- Nút Đặt lại (Tone xám trung tính) -->
-                        <button onclick="app.resetTableFilters()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 11px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; white-space: nowrap;" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
-                            <i class="fa-solid fa-rotate-right"></i> Đặt lại
-                        </button>
+                    <!-- Hàng 1: Thanh tìm kiếm & Các nút thao tác -->
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <div style="flex: 1; position: relative;">
+                            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                            <input type="text" id="tk-search-input" oninput="app.filterTableData()" placeholder="Tìm nhanh theo Mã hoặc Tên thủ tục..." style="width: 100%; padding: 9px 12px 9px 40px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; box-sizing: border-box; transition: 0.2s; background: #f8fafc; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="app.resetTableFilters()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 9px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13.5px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; white-space: nowrap;" onmouseover="this.style.background='#e2e8f0';" onmouseout="this.style.background='#f1f5f9';">
+                                <i class="fa-solid fa-rotate-right"></i> Xoá bộ lọc
+                            </button>
+                            
+                            <button onclick="app.openQRModal()" class="btn-export-qr" style="background: #10b981; color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; font-size: 14px;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                                <i class="fa-solid fa-qrcode"></i> Tải mã QR
+                            </button>
+
+                            <button onclick="app.exportFilteredTableToExcel()" style="background: #10b981; color: #fff; border: none; padding: 9px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13.5px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2); white-space: nowrap;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
+                                <i class="fa-solid fa-file-excel"></i> Tải danh sách
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 2: Cấp cơ quan thực hiện & Cơ quan thực hiện (ĐÃ ĐƯA LÊN TRÊN) -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px;">
+                            <label for="tk-filter-cap-cqth" style="font-size: 11.5px; font-weight: 700; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.5px;">Cấp cơ quan thực hiện</label>
+                            <select id="tk-filter-cap-cqth" onchange="app.handleCapCqthChange()" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                                <option value="">-- Chọn Cấp --</option>
+                                <option value="Bộ">Cấp Bộ</option>
+                                <option value="Tỉnh">Cấp tỉnh</option>
+                            </select>
+                        </div>
                         
-                        <!-- Nút Tải danh sách Excel (Màu xanh lá đặc trưng) -->
-                        <button onclick="app.exportFilteredTableToExcel()" style="background: #10b981; color: #fff; border: none; padding: 11px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2), 0 2px 4px -1px rgba(16, 185, 129, 0.1); white-space: nowrap;" onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)';" onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
-                            <i class="fa-solid fa-file-excel"></i> Tải danh sách
-                        </button>
+                        <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px;">
+                            <label for="tk-filter-cqth" style="font-size: 11.5px; font-weight: 700; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.5px;">Cơ quan thực hiện</label>
+                            <select id="tk-filter-cqth" onchange="app.filterTableData()" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                                <option value="">-- Tất cả --</option>
+                            </select>
+                        </div>
                     </div>
+
+                    
+                    <!-- Hàng 4: Cấp thực hiện, Mức độ DVC & Trạng thái Thu phí -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px;">
+                            <label for="tk-filter-cap" style="font-size: 11.5px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">Cấp thủ tục</label>
+                            <select id="tk-filter-cap" onchange="app.filterTableData()" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                                <option value="">-- Tất cả --</option>
+                                <option value="Bộ">Cấp Bộ</option>
+                                <option value="Tỉnh">Cấp Tỉnh</option>
+                                <option value="Xã">Cấp Xã</option>
+                                <option value="Toàn tỉnh">Cấp Tỉnh + Cấp Xã</option>
+                            </select>
+                        </div>
+
+                        <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px;">
+                            <label for="tk-filter-mucdo" style="font-size: 11.5px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px;">Mức độ DVC</label>
+                            <select id="tk-filter-mucdo" onchange="app.filterTableData()" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                                <option value="">-- Tất cả --</option>
+                                <option value="Toàn trình">Toàn trình</option>
+                                <option value="Một phần">Một phần</option>
+                                <option value="Chưa cung cấp DVC">Chưa cung cấp DVC</option>
+                            </select>
+                        </div>
+                        
+                        <!-- BỔ SUNG: Dropdown Lọc Thu phí -->
+                        <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px;">
+                            <label for="tk-filter-thuphi" style="font-size: 11.5px; font-weight: 700; color: #ef4444; text-transform: uppercase; letter-spacing: 0.5px;">Trạng thái Thu phí</label>
+                            <select id="tk-filter-thuphi" onchange="app.filterTableData()" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                                <option value="">-- Tất cả --</option>
+                                <option value="true">Có phí / lệ phí</option>
+                                <option value="false">Không quy định phí / lệ phí</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Hàng 3: Cơ quan công bố & Lĩnh vực (ĐÃ CHUYỂN XUỐNG DƯỚI) -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px;">
+                            <label for="tk-filter-cqcb" style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Cơ quan công bố</label>
+                            <select id="tk-filter-cqcb" onchange="app.handleCqcbChange()" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                                <option value="">-- Tất cả --</option>
+                            </select>
+                        </div>
+
+                        <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px;">
+                            <label for="tk-filter-linhvuc" style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Lĩnh vực</label>
+                            <select id="tk-filter-linhvuc" onchange="app.filterTableData()" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
+                                <option value="">-- Tất cả --</option>
+                            </select>
+                        </div>
+                    </div>
+                    
                 </div>
 
-                <!-- Hàng 2: Bốn bộ lọc dropdown CÓ GẮN NHÃN (Label) -->
-                <div style="display: flex; flex-wrap: wrap; gap: 15px;">
-                    
-                    <!-- Filter Cơ quan -->
-                    <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 6px;">
-                        <label for="tk-filter-cqcb" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Cơ quan công bố</label>
-                        <select id="tk-filter-cqcb" onchange="app.handleCqcbChange()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer; text-overflow: ellipsis;">
-                            <option value="">-- Tất cả --</option>
-                        </select>
-                    </div>
+            <!-- THANH PHÂN TRANG (PHÍA TRÊN) -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <div id="tk-table-info-top" style="font-size: 13px; color: #64748b; font-weight: 500;"></div>
+                <div id="tk-table-pagination-top" style="display: flex; gap: 6px;"></div>
+            </div>           
 
-                    <!-- Filter Lĩnh vực -->
-                    <div style="flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 6px;">
-                        <label for="tk-filter-linhvuc" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Lĩnh vực</label>
-                        <select id="tk-filter-linhvuc" onchange="app.filterTableData()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer; text-overflow: ellipsis;">
-                            <option value="">-- Tất cả --</option>
-                        </select>
-                    </div>
-
-                    <!-- Filter Cấp thực hiện -->
-                    <div style="flex: 1; min-width: 130px; display: flex; flex-direction: column; gap: 6px;">
-                        <label for="tk-filter-cap" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Cấp thực hiện</label>
-                        <select id="tk-filter-cap" onchange="app.filterTableData()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
-                            <option value="">-- Tất cả --</option>
-                            <option value="Tỉnh">Cấp Tỉnh</option>
-                            <option value="Xã">Cấp Xã</option>
-                        </select>
-                    </div>
-
-                    <!-- Filter Mức độ -->
-                    <div style="flex: 1; min-width: 130px; display: flex; flex-direction: column; gap: 6px;">
-                        <label for="tk-filter-mucdo" style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Mức độ DVC</label>
-                        <select id="tk-filter-mucdo" onchange="app.filterTableData()" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 13.5px; background: #fff; color: var(--text-color); cursor: pointer;">
-                            <option value="">-- Tất cả --</option>
-                            <option value="Toàn trình">Toàn trình</option>
-                            <option value="Một phần">Một phần</option>
-                        </select>
-                    </div>
-                    
-                </div>
-            </div>
             <!-- Khung Bảng (Đã chia lại tỷ lệ cột) -->
             <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow-x: auto; background: #fff;">
                 <table class="modern-table">
                     <thead>
                         <tr>
                             <th style="width: 45px; text-align: center;">STT</th>
-                            <!-- Cột Mã TTHC thu hẹp tối đa -->
                             <th style="width: 85px; text-align: center;">Mã TTHC</th> 
-                            <!-- Cột Tên TTHC được cấp 45% diện tích màn hình để hiển thị đẹp nhất -->
                             <th style="width: 45%; min-width: 350px;">Tên Thủ tục hành chính</th> 
                             <th style="width: 15%;">Lĩnh vực</th>
+                            <!-- TRẢ LẠI TÊN CƠ QUAN CÔNG BỐ -->
                             <th style="width: 15%;">Cơ quan công bố</th>
                             <th style="width: 110px; text-align: center;">Cấp thực hiện</th>
                             <th style="width: 100px; text-align: center;">Mức độ</th>
@@ -414,8 +585,8 @@
         </div>
         </div>
 
-    </div> <!-- ĐÂY LÀ THẺ ĐÓNG CỦA CONTAINER-INNER (Nằm dưới cùng) -->
-
+    </div> <!-- ĐÂY LÀ THẺ ĐÓNG CỦA CONTAINER-INNER (Nằm dưới cùng) -->        
+    
     <button class="fab-donate" onclick="app.showDonate()">
         <i class="fa-solid fa-mug-saucer"></i> Mời cà phê tác giả
     </button>
@@ -431,10 +602,10 @@
                 <button class="close-btn" id="wizard-close-btn" onclick="app.closeWizard()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="modal-body" style="display: flex; flex-direction: column; gap: 20px; max-height: 65vh; overflow-y: auto; padding-right: 5px;">
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px; max-height: 68vh; overflow-y: auto; padding-right: 5px;">
                 
                 <div class="setup-section">
-                    <label style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--primary-color);">1. Chọn Tỉnh/Thành phố:</label>
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px; color: var(--primary-color);">1. Chọn Tỉnh/Thành phố:</label>
                     <div style="position: relative;">
                         <div style="display: flex; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); overflow: hidden;">
                             <input type="text" id="wizard-province-search" placeholder="Nhập để tìm hoặc bấm mũi tên bên phải để chọn..." onkeyup="app.filterWizardProvinces()" onclick="app.toggleProvinceDropdown(event, true)" style="flex: 1; border: none; padding: 10px; font-size: 14px; background: transparent; color: var(--text-color); outline: none;">
@@ -447,14 +618,24 @@
                     </div>                    
                 </div>
 
+                <div class="setup-section">
+                    <label style="font-weight: 700; display: block; margin-bottom: 5px; color: var(--primary-color);">2. Chọn Cơ quan mặc định:</label>
+                    <select id="wizard-default-agency-select" class="form-control" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); outline: none;">
+                        <option value="">-- Chọn Tỉnh/TP trước để tải danh sách cơ quan --</option>
+                    </select>
+                    <small style="color: #64748b; margin-top: 4px; display: block; font-size: 12.5px; line-height: 1.4;">
+                        <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> Nếu thủ tục thuộc cơ quan này, hệ thống sẽ ưu tiên mở thẳng trang nộp hồ sơ.
+                    </small>
+                </div>
+
                 <div class="setup-section" id="wizard-fields-section" style="opacity: 0.5; pointer-events: none; transition: all 0.3s;">
-    <label style="font-weight: 700; display: block; margin-bottom: 8px; color: var(--primary-color);">2. Cấu hình Lĩnh vực thường dùng:</label>
+    <label style="font-weight: 700; display: block; margin-bottom: 5px; color: var(--primary-color);">3. Cấu hình Lĩnh vực thường dùng:</label>
     
-    <select id="wizard-dept-filter" onchange="app.filterWizardFields()" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; margin-bottom: 12px; background: var(--card-bg); color: var(--text-color);">
+    <select id="wizard-dept-filter" onchange="app.filterWizardFields()" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; margin-bottom: 8px; background: var(--card-bg); color: var(--text-color);">
         <option value="">-- Tất cả Bộ/Ngành &amp; Đặc thù --</option>
     </select>
 
-    <div style="margin-bottom: 12px;">
+    <div style="margin-bottom: 8px;">
         <div style="position: relative; display: flex; align-items: center;">
             <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; color: #94a3b8;"></i>
             
@@ -470,37 +651,33 @@
         <label for="wizard-select-all" style="font-weight: 700; cursor: pointer; color: var(--text-color); font-size: 14px;">Chọn/Bỏ chọn tất cả lĩnh vực</label>
     </div>
     
-<div id="wizard-fields-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; height: 180px; align-content: start; overflow-y: auto; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+<div id="wizard-fields-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 7px; height: 145px; align-content: start; overflow-y: auto; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
 
 </div>
 </div>
 
                 <div class="setup-section">
-                    <label style="font-weight: 700; display: block; margin-bottom: 6px; font-size: 13px; color: #64748b;">Lĩnh vực đã chọn:</label>
-                    <div id="wizard-selected-tags" style="display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; min-height: 40px; max-height: 180px; overflow-y: auto; padding: 10px; border: 1px dashed var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                    <label style="font-weight: 700; display: block; margin-bottom: 4px; font-size: 13px; color: #64748b;">Lĩnh vực đã chọn:</label>
+                    <div id="wizard-selected-tags" style="display: flex; flex-wrap: wrap; align-content: flex-start; gap: 5px; min-height: 34px; max-height: 90px; overflow-y: auto; padding: 7px 8px; border: 1px dashed var(--border-color); border-radius: 6px; background: var(--bg-color);">
                         <span style="color: #94a3b8; font-size: 13px; font-style: italic;">Chưa chọn lĩnh vực nào...</span>
                     </div>
                 </div>
             </div>
 
-<!-- Bổ sung tính năng Nộp ẩn danh và Nút tải Extension -->
-<div style="margin-top: 10px; padding: 8px 10px; background-color: #fef3c7; border: 1px dashed #f59e0b; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-    
-    <!-- Nhãn Checkbox -->
-    <label style="display: flex; align-items: center; cursor: pointer; margin: 0; flex: 1;">
+<!-- Tùy chọn Nộp ẩn danh: đặt trong Cấu hình hệ thống -->
+<div style="margin-top: 6px; padding: 9px 12px; background-color: #fef3c7; border: 1px dashed #f59e0b; border-radius: 6px;">
+    <label style="display: flex; align-items: center; cursor: pointer; margin: 0;">
         <input type="checkbox" id="wizard-incognito-mode" style="width: 16px; height: 16px; margin-right: 8px; accent-color: #d97706; flex-shrink: 0;">
         <span style="font-weight: 600; color: #92400e; font-size: 13.5px; line-height: 1.4;">
-            Chế độ ẩn danh nộp hộ công dân (Yêu cầu cài Extension hỗ trợ)
+            Bật chế độ nộp hồ sơ ẩn danh khi có Extension hỗ trợ
         </span>
     </label>
-    
-    <!-- Nút Tải Extension (Đã làm to hơn và không bị xuống dòng) -->
-    <a href="https://raw.githubusercontent.com/ChippedTopaz/dieu-phoi/main/TroLyNopHo_Extension.zip" target="_blank" style="font-size: 12.5px; font-weight: bold; background: #d97706; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; display: flex; align-items: center; gap: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); transition: opacity 0.2s; flex-shrink: 0; white-space: nowrap;">
-        <i class="fa-solid fa-download"></i> Tải Extension
-    </a>
+    <small style="display: block; margin: 6px 0 0 24px; color: #a16207; line-height: 1.45;">
+        Tắt tùy chọn này nếu muốn mở hồ sơ bằng tab trình duyệt thông thường.
+    </small>
 </div>
 
-            <div style="margin-top: 25px; display: flex; gap: 10px;">
+            <div style="margin-top: 14px; display: flex; gap: 10px;">
                 <button onclick="app.saveWizardConfig()" style="flex: 1; background: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; transition: background 0.2s;">
                     <i class="fa-solid fa-floppy-disk"></i> LƯU CẤU HÌNH
                 </button>
@@ -582,11 +759,18 @@
     <script src="../cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="../cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script src="../cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="js/constants.js"></script> <!-- CHÈN DÒNG NÀY VÀO -->
+    <!-- Thư viện tạo mã QR Base64 (Máy chủ Unpkg chống chặn mạng) -->
+    <script src="../unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
+    <!-- Thư viện đóng gói file Excel có chèn ảnh (Máy chủ Unpkg) -->
+    <script src="../unpkg.com/exceljs@4.3.0/dist/exceljs.min.js"></script>
     <script src="js/config.js"></script>
     <script src="js/data-loader.js"></script>
     <script src="js/ui-renderer.js"></script>
-    <script src="js/main.js"></script>
-
+    <script src="js/tthc_stats.js"></script>
+    <script src="js/main_v=2.js"></script>
+    
     <footer class="main-footer">
         <div class="container-inner footer-content">
             
@@ -744,5 +928,220 @@
             </div>
         </div>
     </div>
+
+    <!-- HỘP THOẠI CHI TIẾT THỦ TỤC HÀNH CHÍNH (ENTERPRISE MODAL) -->
+    <div id="procedureDetailModal" style="display: none; opacity: 1 !important; visibility: visible !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 100000; justify-content: center; align-items: flex-start; padding-top: 3vh;">
+        <div class="modal-box" style="background: #fff; width: 95%; max-width: 1200px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 94vh; overflow: hidden; border: 1px solid #e2e8f0;">
+            
+            <!-- STICKY HEADER (MÀU CAM NỔI BẬT) -->
+            <div style="position: sticky; top: 0; z-index: 50; background: var(--primary-color); padding: 16px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                <h2 style="margin: 0; font-size: 17px; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-circle-info" style="margin-right: 8px;"></i> Thông tin chi tiết thủ tục hành chính</h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <!-- Nút Nộp hồ sơ ngay (Đã chuyển lên Header) -->
+                    <button id="btn-submit-dvc" style="background: #fff; color: var(--primary-color); border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.2s; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#fff'">
+                        <i class="fa-solid fa-paper-plane"></i> Nộp hồ sơ ngay
+                    </button>
+                    <!-- Nút Đóng -->
+                    <button onclick="document.getElementById('procedureDetailModal').style.display='none'" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; color: #fff; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <!-- NỘI DUNG CUỘN ĐƯỢC (SCROLLABLE BODY) -->
+            <div style="padding: 0; overflow-y: auto; flex: 1; background: #f8fafc; display: flex; flex-direction: column;">
+                
+                <!-- KHU VỰC 1: THÔNG TIN CƠ BẢN -->
+                <div style="padding: 25px 30px; background: #fff; border-bottom: 8px solid #f1f5f9;">
+                    
+                    <!-- THÊM LẠI PHẦN TÊN TTHC VÀ LĨNH VỰC BỊ MẤT -->
+                    <div style="margin-bottom: 20px;">
+                        <h2 id="detail-title" style="margin: 0 0 10px 0; font-size: 22px; color: var(--primary-color); font-weight: 700; line-height: 1.4;">CHƯA CẬP NHẬT TÊN THỦ TỤC</h2>
+                        <div style="display: flex; gap: 8px; align-items: baseline;">
+                            <span style="color: #64748b; font-size: 14px; font-weight: 600;">Lĩnh vực:</span> 
+                            <span id="detail-linhvuc" style="font-size: 14.5px; font-weight: 600; color: #1e293b; background: #f1f5f9; padding: 4px 12px; border-radius: 6px;"></span>
+                            
+                            <!-- Badges -->
+                            <div id="detail-badges" style="display: flex; gap: 6px; margin-left: 10px;"></div>
+                            
+                            <button id="btn-copy-ma" style="margin-left: auto; background: none; color: #2563eb; border: 1px dashed #bfdbfe; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s; display: flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='none'">
+                                <i class="fa-regular fa-copy"></i> Sao chép Mã
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mã & Số QĐ (1 dòng 2 cột) -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-bottom: 12px; border-top: 1px dashed #e2e8f0; padding-top: 15px; margin-bottom: 12px;">
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 140px;">Mã TTHC:</span> <span id="detail-ma-txt" style="font-family: monospace; font-weight: 700; font-size: 15px; color: #dc2626;"></span></div>
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 110px;">Số Quyết định:</span> <span id="detail-soqd" style="font-weight: 600; color: #1e293b;"></span></div>
+                    </div>
+                    
+                    <!-- Các thông tin khác (Từng dòng 1) -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;"><span style="color: #64748b; min-width: 140px;">Kết quả thực hiện:</span> <span id="detail-ketqua" style="font-weight: 600; color: #1e293b;"></span></div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;"><span style="color: #64748b; min-width: 140px;">Cơ quan ban hành:</span> <span id="detail-cqcb" style="font-weight: 600; color: #1e293b;"></span></div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;"><span style="color: #64748b; min-width: 140px;">Cơ quan thực hiện:</span> <span id="detail-cqth" style="font-weight: 600; color: #1e293b;"></span></div>
+                    
+                    <!-- Cấp thực hiện & Loại thủ tục -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 8px;">
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 140px;">Cấp thực hiện:</span> <span id="detail-cap" style="font-weight: 600; color: #1e293b;"></span></div>
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 110px;">Loại thủ tục:</span> <span id="detail-loai" style="font-weight: 600; color: #1e293b;"></span></div>
+                    </div>
+                    
+                    <!-- BỔ SUNG: Nguồn/Quy định & Trạng thái -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 8px;">
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 140px;">Nguồn/Quy định:</span> <span id="detail-formality" style="font-weight: 600; color: #1e293b;"></span></div>
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 110px;">Trạng thái:</span> <span id="detail-state" style="font-weight: 600; color: #1e293b;"></span></div>
+                    </div>
+
+                    <!-- BỔ SUNG: Tính chất Ngành dọc -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;"><span style="color: #64748b; min-width: 140px;">Tính chất:</span> <span id="detail-isInternal" style="font-weight: 600; color: #1e293b;"></span></div>
+
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;"><span style="color: #64748b; min-width: 140px;">Đối tượng thực hiện:</span> <span id="detail-doituong" style="font-weight: 600; color: #1e293b;"></span></div>
+                    <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 140px;">Địa chỉ tiếp nhận:</span> <span id="detail-diachi" style="font-weight: 600; color: #1e293b; line-height: 1.5;"></span></div>
+                </div>
+
+                <!-- KHU VỰC 2: CÁC TAB CHI TIẾT -->
+                <div style="padding: 20px 30px 40px 30px;">
+                    <!-- Tabs Navigation thông minh -->
+                    <div id="detail-tabs-menu" style="display: flex; gap: 5px; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; overflow-x: auto; padding-bottom: 0;">
+                        <!-- Render bằng JS để ẩn hiện linh hoạt -->
+                    </div>
+
+                    <!-- Nội dung Tab -->
+                    <div id="detail-tab-content" style="background: transparent; font-size: 14.5px; line-height: 1.7; color: #334155; white-space: pre-wrap; font-family: system-ui, -apple-system, sans-serif;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- HỘP THOẠI XUẤT MÃ QR (CUSTOM) -->
+    <div id="qrExportModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 550px; width: 95%;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" style="color: #D2232A;"><i class="fa-solid fa-qrcode"></i> TẢI MÃ QRCODE THỦ TỤC HÀNH CHÍNH</h3>
+                </div>
+                <button class="close-btn" onclick="app.closeQRModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" style="padding-top: 10px;">
+                <p style="margin-top: 0; margin-bottom: 20px; color: #64748b; font-size: 14.5px; text-align: center;">Vui lòng chọn định dạng xuất file phù hợp với nhu cầu của bạn:</p>
+                
+                <button onclick="app.startExportQR('basic')" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; width: 100%; padding: 15px 20px; margin-bottom: 15px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);" onmouseover="this.style.background='#f0fdf4'; this.style.borderColor='#86efac'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1'; this.style.transform='none';">
+                    <div style="width: 50px; height: 50px; border-radius: 10px; background: #dcfce3; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;"><i class="fa-solid fa-table-list"></i></div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 800; font-size: 15px; color: #16a34a; margin-bottom: 4px; text-transform: uppercase;">Danh sách Tổng hợp</div>
+                        <div style="font-size: 13px; color: #64748b; line-height: 1.4;">Xuất danh sách cơ bản kèm mã QR. Phù hợp để cán bộ tra cứu nhanh trên máy tính hoặc xử lý dữ liệu.</div>
+                    </div>
+                </button>
+
+                <button onclick="app.startExportQR('advanced')" style="font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; width: 100%; padding: 15px 20px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);" onmouseover="this.style.background='#fef2f2'; this.style.borderColor='#fca5a5'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1'; this.style.transform='none';">
+                    <div style="width: 50px; height: 50px; border-radius: 10px; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;"><i class="fa-solid fa-book-open"></i></div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 800; font-size: 15px; color: #D2232A; margin-bottom: 4px; text-transform: uppercase;">Danh bạ mẫu (In ấn)</div>
+                        <div style="font-size: 13px; color: #64748b; line-height: 1.4;">Trình bày dạng ấn phẩm, tự động nhóm theo Cơ quan, Lĩnh vực, có trang bìa và đánh số trang. <b style="color:#ef4444;">Khuyên dùng để in.</b></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HỘP THOẠI CẤU HÌNH TRANG BÌA WORD (CẬP NHẬT THÊM CƠ QUAN CHỦ QUẢN) -->
+    <div id="wordConfigModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 550px; width: 95%;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" style="color: #D2232A;"><i class="fa-solid fa-file-word"></i> CẤU HÌNH BẢN IN DANH BẠ</h3>
+                </div>
+                <button class="close-btn" onclick="app.closeWordConfigModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" style="padding-top: 15px;">
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px; font-size: 14px;">1. Tên Cơ quan chủ quản:</label>
+                    <input type="text" id="wordParentAgency" placeholder="VD: ỦY BAN NHÂN DÂN TỈNH PHÚ THỌ" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14.5px; font-weight: 600; color: #D2232A; box-sizing: border-box; text-transform: uppercase;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px; font-size: 14px;">2. Tên Trung tâm / Điểm tiếp nhận:</label>
+                    <input type="text" id="wordAgencyName" placeholder="VD: TRUNG TÂM PHỤC VỤ HÀNH CHÍNH CÔNG XÃ..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14.5px; font-weight: 600; color: #D2232A; box-sizing: border-box; text-transform: uppercase;">
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px; font-size: 14px;">3. Giao diện trang bìa:</label>
+                    <div style="display: flex; gap: 15px;">
+                        
+                        <!-- Theme Bìa Trắng (Mặc định) -->
+                        <div id="theme-white" onclick="app.selectWordTheme('white')" style="flex: 1; border: 2.5px solid #D2232A; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; background: #fff; box-shadow: 0 4px 6px rgba(210,35,42,0.1); transition: 0.2s;">
+                            <div style="width: 40px; height: 50px; border: 2px double #D2232A; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-qrcode" style="color: #D2232A; font-size: 18px;"></i>
+                            </div>
+                            <div style="font-weight: 900; color: #D2232A; font-size: 14px;">BÌA TRẮNG</div>
+                            <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">Nền trắng, Toàn bộ viền &amp; chữ màu đỏ</div>
+                        </div>
+
+                        <!-- Theme Bìa Đỏ -->
+                        <div id="theme-red" onclick="app.selectWordTheme('red')" style="flex: 1; border: 2.5px solid #cbd5e1; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; background: #D2232A; transition: 0.2s;">
+                            <div style="width: 40px; height: 50px; border: 2px double #fff; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-qrcode" style="color: #fff; font-size: 18px;"></i>
+                            </div>
+                            <div style="font-weight: 900; color: #fff; font-size: 14px;">BÌA ĐỎ</div>
+                            <div style="font-size: 11.5px; color: rgba(255,255,255,0.8); margin-top: 4px;">Nền đỏ, Toàn bộ viền &amp; chữ màu trắng</div>
+                        </div>
+
+                    </div>
+                    <input type="hidden" id="wordCoverTheme" value="white">
+                </div>
+
+                <button onclick="app.executeWordExport()" style="width: 100%; padding: 14px; background: #D2232A; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px rgba(210,35,42,0.2); transition: 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#D2232A'">
+                    <i class="fa-solid fa-file-export"></i> TIẾN HÀNH XUẤT FILE WORD
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL DANH SÁCH CHI TIẾT TTHC BIẾN ĐỘNG    -->
+    <!-- ========================================== -->
+    <div id="tthc-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div style="background: #fff; width: 90%; max-width: 1100px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh;">
+            
+            <!-- Modal Header -->
+            <div style="padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                <h4 id="tthc-modal-title" style="margin: 0; font-weight: 800; color: #1e293b; font-size: 16px; text-transform: uppercase;">
+                    <i class="fa-solid fa-list-check" style="color: #0284c7; margin-right: 8px;"></i> DANH SÁCH CHI TIẾT
+                </h4>
+                <button onclick="document.getElementById('tthc-modal').style.display='none'" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b; transition: 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#64748b'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <!-- Modal Body (Table) -->
+            <div style="padding: 20px; overflow-y: auto; flex: 1;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                    <thead>
+                        <tr style="background: #f1f5f9; color: #475569; text-align: left;">
+                            <th style="padding: 12px; border: 1px solid #e2e8f0; width: 50px; text-align: center;">STT</th>
+                            <th style="padding: 12px; border: 1px solid #e2e8f0; width: 130px;">Mã TTHC</th>
+                            <th style="padding: 12px; border: 1px solid #e2e8f0;">Tên thủ tục</th>
+                            <th style="padding: 12px; border: 1px solid #e2e8f0; width: 160px;">Lĩnh vực</th>
+                            <th style="padding: 12px; border: 1px solid #e2e8f0; width: 180px;">Cơ quan công bố</th>
+                            <th id="tthc-modal-col-extra" style="padding: 12px; border: 1px solid #e2e8f0; width: 180px;">Nội dung</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tthc-modal-tbody">
+                        <!-- Javascript sẽ đổ dữ liệu vào đây -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Modal Footer (Nút Xuất Excel) -->
+            <div style="padding: 15px 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc;">
+                <button onclick="document.getElementById('tthc-modal').style.display='none'" style="padding: 8px 16px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-weight: 600; color: #475569; transition: 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Đóng lại</button>
+                <button onclick="TTHC_App.exportExcel()" style="padding: 8px 16px; border: none; background: #10b981; color: #fff; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: 0.2s; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
+                    <i class="fa-solid fa-file-excel"></i> Tải Excel
+                </button>
+            </div>
+        </div>
+    </div>
+    
 
 </body></html>
