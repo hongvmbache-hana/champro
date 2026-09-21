@@ -1,0 +1,1628 @@
+<!DOCTYPE html><html lang="vi"><head>
+    <meta charset="utf-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=658e0c30-af50-4e92-8755-3dbd0d192949
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="hosting-provider" content="Netlify">
+<meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=658e0c30-af50-4e92-8755-3dbd0d192949">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niêm yết điện tử TTHC</title>
+    <link rel="icon" type="image/png" href="../../cdn.jsdelivr.net/gh/ChippedTopaz/dieu-phoi@main/Logo CCHC.png">
+    <!-- Tích hợp Icon & Font -->
+    <link rel="icon" href="../icons/kettle.png" type="image/png">
+    <link rel="stylesheet" href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="../../cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="../../fonts.googleapis.com/css2/family=Be+Vietnam+Pro_wght@400;500;600;700&amp;display=swap.css" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           TỐI ƯU HIỂN THỊ DÀNH RIÊNG CHO ĐIỆN THOẠI (BẢN V4 TỐI THƯỢNG)
+           ========================================== */
+        @media (max-width: 768px) {
+            /* --- KHÓA TRỤC NGANG TOÀN TRANG --- */
+            body, html { max-width: 100vw !important; overflow-x: hidden !important; }
+            .kiosk-container { padding: 15px !important; width: 100vw !important; box-sizing: border-box !important; overflow-x: hidden !important; }
+            
+            /* --- 1. HEADER --- */
+            .ny-header { flex-direction: column !important; padding: 15px !important; gap: 0 !important; box-sizing: border-box !important; width: 100% !important; }
+            .ny-brand { flex-direction: column !important; gap: 8px !important; text-align: center !important; margin-bottom: 12px !important; }
+            .ny-logo { width: 50px !important; }
+            .ny-brand-text div:first-child { font-size: 16px !important; white-space: normal !important; }
+            .ny-brand-text #ny-display-agency { font-size: 13px !important; margin-top: 4px !important; line-height: 1.4 !important; white-space: normal !important; }
+            
+            .ny-header > div:last-child {
+                width: 100% !important; justify-content: center !important; padding-top: 10px !important;
+                border-top: 1px dashed #cbd5e1 !important; gap: 20px !important; flex-wrap: wrap !important;
+            }
+
+            /* --- 2. THANH CÔNG CỤ (TOOLBAR) --- */
+            .ny-toolbar { display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; box-sizing: border-box !important; }
+            .ny-toolbar > button:first-child, .ny-toolbar > div { flex: 0 0 100% !important; max-width: 100% !important; box-sizing: border-box !important; margin: 0 !important; }
+            .ny-toolbar > button:first-child { justify-content: center !important; padding: 10px !important; font-size: 14px !important; }
+            .ny-toolbar input { padding: 10px 15px 10px 35px !important; font-size: 14px !important; width: 100% !important; box-sizing: border-box !important; }
+            
+            .ny-toolbar > button:nth-child(3), .ny-toolbar > button:nth-child(4) {
+                flex: 1 1 45% !important; min-width: 0 !important; justify-content: center !important;
+                padding: 10px 5px !important; font-size: 12.5px !important; white-space: normal !important;
+                text-align: center !important; box-sizing: border-box !important; margin: 0 !important;
+            }
+
+            .kiosk-container > div:first-child { padding: 10px 15px 15px 15px !important; margin: -15px -15px 0 -15px !important; width: 100vw !important; box-sizing: border-box !important; }
+
+            /* --- 3. LƯỚI THẺ LĨNH VỰC (MÀU ĐỎ): FIX LỖI KHÔNG ẨN & BỊ CẮT THẺ --- */
+            /* Mẹo: Chỉ ép Flex khi JS không yêu cầu ẩn (để Javascript hoạt động bình thường) */
+            #ny-grid-view:not([style*="none"]) {
+                display: flex !important;
+            }
+            
+            #ny-grid-view {
+                flex-wrap: wrap !important; 
+                gap: 10px !important;
+                padding: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important; 
+                /* MỞ KHÓA CHIỀU CAO: Giúp hiển thị đủ 12 thẻ mà không bị cắt */
+                height: auto !important;
+                max-height: none !important;
+                overflow-y: visible !important;
+            }
+            
+            /* Dùng Flex Basis để chia đúng 50% màn hình trừ đi khe hở */
+            #ny-grid-view > div {
+                flex: 0 0 calc(50% - 5px) !important; 
+                max-width: calc(50% - 5px) !important;
+                width: calc(50% - 5px) !important;
+                min-width: 0 !important; 
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                padding: 15px 10px !important;
+                min-height: unset !important;
+                white-space: normal !important; 
+            }
+            
+            #ny-grid-view > div .ny-card-badge { font-size: 11px !important; padding: 2px 6px !important; }
+            #ny-grid-view > div .ny-card-title { font-size: 13.5px !important; margin-top: 10px !important; line-height: 1.4 !important; word-wrap: break-word !important; }
+            #ny-grid-view > div .ny-card-agency { font-size: 10px !important; white-space: normal !important; }
+            
+            /* Dùng Flex Basis để chia đúng 50% màn hình trừ đi khe hở */
+            #ny-grid-view > div {
+                flex: 0 0 calc(50% - 5px) !important; 
+                max-width: calc(50% - 5px) !important;
+                width: calc(50% - 5px) !important;
+                min-width: 0 !important; /* Đập bỏ lệnh min-width gốc */
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                padding: 15px 10px !important;
+                min-height: unset !important;
+                white-space: normal !important; /* Đập bỏ lệnh cấm rớt dòng */
+            }
+            
+            #ny-grid-view > div .ny-card-badge { font-size: 11px !important; padding: 2px 6px !important; }
+            #ny-grid-view > div .ny-card-title { font-size: 13.5px !important; margin-top: 10px !important; line-height: 1.4 !important; word-wrap: break-word !important; }
+            #ny-grid-view > div .ny-card-agency { font-size: 10px !important; white-space: normal !important; }
+
+            /* --- 4. DANH SÁCH TTHC BÊN TRONG: ÉP DỌC TRÊN MOBILE CHUẨN XÁC 100% --- */
+            
+            /* 4.0. Phá vỡ hàng ngang, ép toàn bộ các dòng thủ tục thành cột dọc */
+            #ny-content-area > div {
+                display: flex !important;
+                flex-direction: column !important; /* Ép xếp chồng lên nhau */
+                align-items: stretch !important; /* Kéo giãn nội dung chạm 2 mép */
+                padding: 20px 15px !important;
+                height: auto !important;
+            }
+            
+            /* 4.1. Ẩn hoàn toàn cột STT (Div con số 1) */
+            #ny-content-area > div > div:first-child {
+                display: none !important;
+            }
+            
+            /* 4.2. Khối Nội dung (Tên + Mã) (Div con số 2) chiếm trọn 100% bề ngang */
+            #ny-content-area > div > div:nth-child(2) {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: none !important; /* Phá vỡ lệnh flex gốc */
+                padding: 0 !important;
+                margin-bottom: 15px !important; /* Tạo khoảng trống đẩy nút nộp hồ sơ xuống */
+            }
+            
+            /* Đảm bảo Tên TTHC tự do rớt dòng, chữ to và rõ ràng */
+            #ny-content-area > div > div:nth-child(2) b,
+            #ny-content-area > div > div:nth-child(2) strong {
+                font-size: 16px !important;
+                line-height: 1.5 !important;
+                display: block !important;
+                white-space: normal !important;
+                margin-bottom: 6px !important;
+            }
+            
+            /* 4.3. Khối Nút bấm (Div con số 3) */
+            #ny-content-area > div > div:last-child {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex: none !important;
+                display: block !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Kéo giãn nút Nộp hồ sơ full 100% bề ngang màn hình điện thoại */
+            #ny-content-area > div > div:last-child button {
+                width: 100% !important;
+                padding: 14px 10px !important;
+                font-size: 16px !important;
+                border-radius: 8px !important;
+                text-align: center !important;
+                justify-content: center !important;
+                display: flex !important;
+                box-sizing: border-box !important;
+            }
+
+            /* --- 5. FOOTER --- */
+            footer { padding: 0 0 20px 0 !important; width: 100% !important; box-sizing: border-box !important; margin: 0 !important;}
+            footer > div { flex-direction: column !important; padding: 20px 15px !important; gap: 15px !important; box-sizing: border-box !important; width: 100% !important;}
+            footer > div > div { width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; padding: 0 !important;}
+            footer > div > div:nth-child(2) { border-left: none !important; border-right: none !important; border-top: 1px dashed #cbd5e1 !important; border-bottom: 1px dashed #cbd5e1 !important; padding: 15px 0 !important; }
+            footer > div > div:last-child button { width: 100% !important; justify-content: center !important; padding: 12px !important; box-sizing: border-box !important; }
+        }
+    </style>
+
+    <style>
+        /* Ép Font chuẩn cho toàn bộ Kiosk */
+        body, input, button, select, textarea, .tom-select, .ts-control {
+            font-family: 'Be Vietnam Pro', sans-serif !important;
+        }
+    </style>
+    <!-- Thư viện TomSelect -->
+    <link href="../../cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+    <script src="../../cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    
+    <style>
+    /* Bo góc, chỉnh size và CHỐNG BÓP NGHẸT cho TomSelect */
+    .ts-wrapper {
+        min-width: 200px !important; /* Giảm từ 300px xuống 200px để không đẩy nhau ra ngoài */
+        max-width: 100% !important; /* Khóa giới hạn, không cho phép tràn viền phải */
+        flex: 1 1 auto; 
+        box-sizing: border-box;
+    }
+    .ts-control { 
+        border-radius: 8px !important; 
+        border: 1px solid #cbd5e1 !important; 
+        padding: 12px 15px !important; 
+        font-size: 15px !important; 
+        background-color: #fff !important;
+    }
+    .ts-dropdown { 
+        border-radius: 8px !important; 
+        font-size: 15px !important; 
+        text-align: left !important;
+        max-width: 100vw !important; /* Đảm bảo menu xổ xuống không bị rớt ra ngoài màn hình */
+        box-sizing: border-box;
+    }
+    /* Xử lý chữ dài trong danh sách xổ xuống */
+    .ts-dropdown .option {
+        padding: 10px 15px;
+        white-space: normal !important; 
+        word-break: break-word;
+    }
+    </style>
+    <style>
+        /* Tối ưu riêng cho Kiosk Toàn màn hình */
+        body { background: #f1f5f9; margin: 0; padding: 0; overflow-x: hidden; }
+        .kiosk-container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+        .ny-header { box-shadow: 0 10px 25px rgba(210, 35, 42, 0.1); border-bottom: 4px solid #FFCB05; }
+        /* ==========================================
+           VÁ LỖI TRÀN Ô TÌM KIẾM & THANH CUỘN NGANG 
+           ========================================== */
+        
+        /* 1. Ép ô tìm kiếm không được phình to vượt quá khung */
+        .modal-box input, 
+        .modal-box input[type="text"] {
+            box-sizing: border-box !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* 2. Cấm hiển thị thanh cuộn ngang trên toàn bộ hộp thoại */
+        .modal-box {
+            overflow-x: hidden !important;
+        }
+
+        /* 3. Đảm bảo danh sách cơ quan bên dưới chỉ cuộn dọc, tuyệt đối không cuộn ngang */
+        .modal-box div[style*="overflow"] {
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+        }
+    </style>    
+</head>
+<body>
+
+    <!-- MÀN HÌNH LOADING CHỜ DỮ LIỆU -->
+    <div id="ny-loading" style="position: fixed; top:0; left:0; width:100%; height:100%; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <i class="fa-solid fa-spinner fa-spin fa-3x" style="color: #D2232A; margin-bottom: 20px;"></i>
+        <h2 style="color: #D2232A;">ĐANG TẢI DỮ LIỆU NIÊM YẾT QUỐC GIA...</h2>
+        <p style="color: #64748b;">Vui lòng đợi trong giây lát</p>
+    </div>
+
+    <div class="kiosk-container">
+        <!-- BỌC KHỐI STICKY: Cố định Header và Thanh tìm kiếm khi cuộn trang -->
+        <div style="position: sticky; top: 0; z-index: 100; background: #f1f5f9; margin: -20px -20px 0 -20px; padding: 20px 20px 15px 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);">
+            
+            <!-- 1. BỘ NHẬN DIỆN THƯƠNG HIỆU THEO TT 03/2025 -->
+            <div class="ny-header" style="display: flex; align-items: center; justify-content: space-between;">
+                
+                <!-- Khối Logo và Chữ được căn giữa với nhau theo chiều dọc -->
+                <div class="ny-brand" style="display: flex; align-items: center; gap: 20px;">
+                    <img src="../../cdn.jsdelivr.net/gh/ChippedTopaz/dieu-phoi@main/Logo CCHC.png" alt="Logo" class="ny-logo" style="width: 75px; height: auto;">
+                    
+                    <div class="ny-brand-text" style="display: flex; flex-direction: column; justify-content: center;">
+                        <!-- Ép chặt Font Be Vietnam Pro bằng lệnh !important -->
+                        <div style="font-family: 'Be Vietnam Pro', sans-serif !important; font-size: 26px; color: #D2232A; font-weight: 800; text-transform: uppercase; line-height: 1.2;">BẢNG NIÊM YẾT THỦ TỤC HÀNH CHÍNH</div>
+                        <div id="ny-display-agency" style="font-family: 'Be Vietnam Pro', sans-serif !important; font-size: 18px; color: #1e293b; font-weight: 700; text-transform: uppercase; margin-top: 6px; line-height: 1.2;">ĐANG TẢI TÊN CƠ QUAN...</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div id="ny-clock" style="font-weight: 700; font-size: 18px; color: #D2232A; font-family: monospace;">00:00:00</div>
+                    <!-- NÚT ĐỔI MÀU GIAO DIỆN MỚI THÊM -->
+                    <button onclick="NyApp.toggleGridColorMode()" style="background: none; border: none; font-size: 22px; color: #D2232A; cursor: pointer; transition: 0.2s;" title="Đổi màu Trắng/Đỏ" onmouseover="this.style.color='#b91c1c'" onmouseout="this.style.color='#D2232A'">
+                        <i class="fa-solid fa-circle-half-stroke"></i>
+                    </button>
+                    <button onclick="NyApp.openNySetup()" class="btn-ny-config" title="Cấu hình tên Trung tâm"><i class="fa-solid fa-gear"></i></button>
+                </div>
+            </div>
+
+            <!-- 2. THANH TÌM KIẾM & BỘ LỌC TO BẢN -->
+            <div class="ny-toolbar" style="display: flex; gap: 15px; align-items: stretch;">
+                
+                <!-- NÚT TRANG CHỦ -->
+                <button onclick="NyApp.resetKioskUI()" style="background: #D2232A; color: white; border: none; padding: 0 25px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 8px; white-space: nowrap; box-shadow: 0 4px 6px rgba(210,35,42,0.2); transition: all 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#D2232A'">
+                    <i class="fa-solid fa-house"></i> TRANG CHỦ
+                </button>
+
+                <!-- Ô TÌM KIẾM -->
+                <div style="flex: 1; position: relative;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px;"></i>
+                    <input type="text" id="ny-search-box" oninput="NyApp.handleSearch()" placeholder="Chạm vào đây để nhập mã hoặc tên thủ tục..." style="width: 100%; padding: 15px 20px 15px 50px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 16px; box-sizing: border-box; background: #f8fafc; transition: all 0.2s;">
+                </div>
+                
+                <!-- (MỚI) NÚT HƯỚNG DẪN PAKN (Tông màu Cam nhạt để phân biệt với nút Cấu hình) -->
+                <button onclick="document.getElementById('paknModal').classList.add('active')" style="background: #fff7ed; color: #ea580c; border: 1px solid #fdba74; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);" onmouseover="this.style.background='#ffedd5'; this.style.color='#c2410c';" onmouseout="this.style.background='#fff7ed'; this.style.color='#ea580c';">
+                    <i class="fa-solid fa-bullhorn"></i> Hướng dẫn PAKN
+                </button>
+
+                <!-- NÚT CẤU HÌNH LĨNH VỰC -->
+                <button onclick="NyApp.openConfigModal()" style="background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);" onmouseover="this.style.background='#e2e8f0'; this.style.color='#1e293b';" onmouseout="this.style.background='#f8fafc'; this.style.color='#475569';">
+                    <i class="fa-solid fa-sliders"></i> Cấu hình
+                </button>
+            </div>
+
+        </div> <!-- KẾT THÚC KHỐI STICKY -->
+
+        <!-- 3. KHU VỰC BẢNG NIÊM YẾT -->
+        <!-- Màn hình 1: Lưới Lĩnh vực (Sẽ hiển thị mặc định ở Trang chủ) -->
+        <div id="ny-grid-view" style="display: none; margin-top: 25px;"></div>
+
+        <!-- Màn hình 2: Bảng danh sách TTHC (Hiển thị khi có tìm kiếm hoặc chọn lĩnh vực) -->
+        <div id="ny-list-view">
+            <div id="ny-content-area" style="margin-top: 25px; padding-bottom: 80px;"></div>
+        </div>
+        
+    </div>
+
+    <!-- CÁC HỘP THOẠI MODAL (CẤU HÌNH, PAKN, CHI TIẾT TTHC) -->
+    <!-- Modal Cấu hình -->
+    <div id="nySetupModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" style="color: #D2232A;">CẤU HÌNH KIOSK NIÊM YẾT</h3>
+                </div>
+                <button class="close-btn" onclick="document.getElementById('nySetupModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold; margin-bottom: 8px; display: block;">1. Chọn Tỉnh/Thành phố (Nguồn dữ liệu):</label>
+                <select id="ny-province-select" class="prov-btn" style="width: 100%; box-sizing: border-box; text-align: left; margin-bottom: 15px; cursor: pointer; appearance: auto; background: #fff;">
+                    <option value="">-- Đang tải danh sách Tỉnh/TP... --</option>
+                </select>
+                
+                <label style="font-weight: bold; margin-bottom: 8px; display: block;">2. Tên Trung tâm / Điểm tiếp nhận:</label>
+                <input type="text" id="ny-agency-input" class="prov-btn" style="width: 100%; box-sizing: border-box; text-align: left; margin-bottom: 15px;" placeholder="VD: TRUNG TÂM PHỤC VỤ HÀNH CHÍNH CÔNG XÃ VĨNH TƯỜNG...">
+
+                <div style="margin-bottom: 15px;">
+                        <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px;">Địa chỉ trụ sở:</label>
+                        <input type="text" id="ny-address-input" placeholder="VD: Số 123 Đường ABC..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 15px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px;">Số điện thoại liên hệ:</label>
+                        <input type="text" id="ny-phone-input" placeholder="VD: 0243 123 4567" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 15px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 8px;">Giờ làm việc:</label>
+                        <input type="text" id="ny-time-input" placeholder="VD: Sáng: 07h30 - 11h30 | Chiều: 13h00 - 17h00" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 15px;">
+                    </div>
+
+                <!-- BỔ SUNG: BỘ LỌC CẤP THỰC HIỆN -->
+                <label style="font-weight: bold; margin-bottom: 8px; display: block;">3. Cấp thực hiện niêm yết:</label>
+                <select id="ny-level-select" class="prov-btn" style="width: 100%; box-sizing: border-box; text-align: left; cursor: pointer; appearance: auto; background: #fff;">
+                    <option value="all">-- Hiển thị tất cả các Cấp --</option>
+                    <option value="tinh">Chỉ niêm yết thủ tục Cấp Tỉnh</option>
+                    <option value="xa">Chỉ niêm yết thủ tục Cấp Xã</option>
+                    <option value="tinh_xa">Niêm yết thủ tục Cấp Tỉnh + Cấp Xã</option>
+                </select>
+            </div>
+            <button onclick="NyApp.saveNySetup()" style="width: 100%; padding: 12px; background: #D2232A; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer;">LƯU &amp; TẢI LẠI DỮ LIỆU</button>
+        </div>
+    </div>
+
+    <!-- Modal PAKN -->
+    <div id="paknModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 750px;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" style="color: #D2232A;">HƯỚNG DẪN PHẢN ÁNH, KIẾN NGHỊ</h3>
+                </div>
+                <button class="close-btn" onclick="document.getElementById('paknModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="line-height: 1.6; text-align: justify; color: var(--text-color); font-size: 15px;">
+                
+                <!-- Mục 1: Các nội dung tiếp nhận -->
+                <div style="color: #15803d; font-weight: bold; margin-bottom: 8px; font-size: 16px;">
+                    <i class="fa-solid fa-circle-check"></i> 1. Hệ thống tiếp nhận các phản ánh, kiến nghị về:
+                </div>
+                <ul style="padding-left: 20px; margin-bottom: 20px; margin-top: 0;">
+                    <li style="margin-bottom: 8px;">Hành vi chậm trễ, gây phiền hà hoặc không thực hiện, thực hiện không đúng quy định của cán bộ, công chức, viên chức trong giải quyết thủ tục hành chính;</li>
+                    <li style="margin-bottom: 8px;">Những cơ chế, chính sách, thủ tục hành chính không phù hợp với thực tế, không đồng bộ, không thống nhất, không hợp pháp, trái với các điều ước quốc tế mà Việt Nam đã ký kết hoặc gia nhập;</li>
+                    <li style="margin-bottom: 8px;">Những giải pháp, sáng kiến ban hành mới quy định về cơ chế, chính sách, thủ tục hành chính liên quan đến hoạt động sản xuất, kinh doanh và đời sống của người dân.</li>
+                    <li>Các trường hợp chậm trễ, không thực hiện, thực hiện không đúng Nghị quyết 68/NQ-CP và Quyết định 23/2021/QĐ-TTg.</li>
+                </ul>
+
+                <!-- Mục 2: Các nội dung KHÔNG tiếp nhận -->
+                <div style="color: #dc2626; font-weight: bold; margin-bottom: 20px; font-size: 16px; background: #fef2f2; padding: 10px 15px; border-radius: 6px; border-left: 4px solid #dc2626;">
+                    <i class="fa-solid fa-circle-xmark"></i> 2. Hệ thống không tiếp nhận đơn thư khiếu nại, tố cáo và hướng dẫn giải đáp pháp luật.
+                </div>
+
+                <div style="background: rgba(210, 35, 42, 0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #D2232A; margin-bottom: 20px;">
+                    <div><i class="fa-solid fa-earth-americas" style="color: #D2232A; width: 25px;"></i> Truy cập Cổng DVC Quốc gia: <b>dichvucong.gov.vn</b></div>
+                    <div style="margin-top: 8px;"><i class="fa-solid fa-phone" style="color: #D2232A; width: 25px;"></i> Tổng đài hỗ trợ: <b>18001096</b></div>
+                </div>
+
+                <!-- NÚT GỬI PAKN ĐIỀU HƯỚNG ẨN DANH -->
+                <button onclick="NyApp.openPAKN()" style="width: 100%; padding: 12px; background: #D2232A; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 6px rgba(210,35,42,0.2); transition: 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#D2232A'">
+                    <i class="fa-solid fa-paper-plane"></i> GỬI PHẢN ÁNH, KIẾN NGHỊ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Chi tiết TTHC (Đồng bộ 100% với index.html, màu nhận diện Kiosk) -->
+    <div id="procedureDetailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 100000; justify-content: center; align-items: flex-start; padding-top: 3vh;">
+        <div class="modal-box" style="background: #fff; width: 95%; max-width: 1200px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 94vh; overflow: hidden; border: 1px solid #e2e8f0;">
+            
+            <!-- STICKY HEADER (MÀU ĐỎ KIOSK) -->
+            <div style="position: sticky; top: 0; z-index: 50; background: #D2232A; padding: 16px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                <h2 style="margin: 0; font-size: 17px; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;"><i class="fa-solid fa-circle-info" style="margin-right: 8px;"></i> Thông tin chi tiết thủ tục hành chính</h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button id="btn-submit-dvc" style="background: #fff; color: #D2232A; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.2s; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <i class="fa-solid fa-paper-plane"></i> Nộp hồ sơ trực tuyến
+                    </button>
+                    <button onclick="document.getElementById('procedureDetailModal').style.display='none'" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; color: #fff; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <!-- NỘI DUNG CUỘN ĐƯỢC -->
+            <div style="padding: 0; overflow-y: auto; flex: 1; background: #f8fafc; display: flex; flex-direction: column;">
+                
+                <!-- KHU VỰC 1: THÔNG TIN CƠ BẢN -->
+                <div style="padding: 25px 30px; background: #fff; border-bottom: 8px solid #f1f5f9;">
+                    <div style="margin-bottom: 20px;">
+                        <h2 id="detail-title" style="margin: 0 0 10px 0; font-size: 22px; color: #D2232A; font-weight: 700; line-height: 1.4;">ĐANG TẢI...</h2>
+                        <div style="display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;">
+                            <span style="color: #64748b; font-size: 15px; font-weight: 600;">Lĩnh vực:</span> 
+                            <span id="detail-linhvuc" style="font-size: 15px; font-weight: 600; color: #1e293b; background: #f1f5f9; padding: 6px 12px; border-radius: 6px;"></span>
+                            <button id="btn-copy-ma" style="margin-left: auto; background: none; color: #2563eb; border: 1px dashed #bfdbfe; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-regular fa-copy"></i> Sao chép Mã TTHC
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-bottom: 12px; border-top: 1px dashed #e2e8f0; padding-top: 15px; margin-bottom: 12px; font-size: 15px;">
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 160px;">Mã TTHC:</span> <span id="detail-ma-txt" style="font-family: monospace; font-weight: 700; font-size: 16px; color: #dc2626;"></span></div>
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 140px;">Số Quyết định:</span> <span id="detail-soqd" style="font-weight: 600; color: #1e293b;"></span></div>
+                    </div>
+                    
+                    <div style="font-size: 15px;">
+                        <div style="display: flex; gap: 8px; margin-bottom: 10px;"><span style="color: #64748b; min-width: 160px;">Kết quả thực hiện:</span> <span id="detail-ketqua" style="font-weight: 600; color: #1e293b;"></span></div>
+                        <div style="display: flex; gap: 8px; margin-bottom: 10px;"><span style="color: #64748b; min-width: 160px;">Cơ quan ban hành:</span> <span id="detail-cqcb" style="font-weight: 600; color: #1e293b;"></span></div>
+                        <div style="display: flex; gap: 8px; margin-bottom: 10px;"><span style="color: #64748b; min-width: 160px;">Cơ quan thực hiện:</span> <span id="detail-cqth" style="font-weight: 600; color: #1e293b;"></span></div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                            <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 160px;">Cấp thực hiện:</span> <span id="detail-cap" style="font-weight: 600; color: #1e293b;"></span></div>
+                            <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 140px;">Loại thủ tục:</span> <span id="detail-loai" style="font-weight: 600; color: #1e293b;"></span></div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                            <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 160px;">Nguồn/Quy định:</span> <span id="detail-formality" style="font-weight: 600; color: #1e293b;"></span></div>
+                            <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 140px;">Trạng thái:</span> <span id="detail-state" style="font-weight: 600; color: #1e293b;"></span></div>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; margin-bottom: 10px;"><span style="color: #64748b; min-width: 160px;">Tính chất:</span> <span id="detail-isInternal" style="font-weight: 600; color: #1e293b;"></span></div>
+                        <div style="display: flex; gap: 8px; margin-bottom: 10px;"><span style="color: #64748b; min-width: 160px;">Đối tượng thực hiện:</span> <span id="detail-doituong" style="font-weight: 600; color: #1e293b;"></span></div>
+                        <div style="display: flex; gap: 8px;"><span style="color: #64748b; min-width: 160px;">Địa chỉ tiếp nhận:</span> <span id="detail-diachi" style="font-weight: 600; color: #1e293b; line-height: 1.5;"></span></div>
+                    </div>
+                </div>
+
+                <!-- KHU VỰC 2: CÁC TAB CHI TIẾT -->
+                <div style="padding: 20px 30px 40px 30px;">
+                    <div id="detail-tabs-menu" style="display: flex; gap: 10px; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+                        <!-- JS sẽ đổ tab vào đây -->
+                    </div>
+                    <div id="detail-tab-content" style="font-size: 15px; line-height: 1.7; color: #334155; white-space: pre-wrap; font-family: system-ui, -apple-system, sans-serif;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <!-- HỘP THOẠI 1: CHỌN DVC (Dùng khi 1 TTHC có nhiều dịch vụ công) -->
+    <div id="dvcSelectionModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 700px;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" style="color: #D2232A;"><i class="fa-solid fa-list-check"></i> CHỌN DỊCH VỤ CÔNG TRỰC TUYẾN</h3>
+                </div>
+                <button class="close-btn" onclick="document.getElementById('dvcSelectionModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="padding-top: 10px; padding-bottom: 10px;">
+                <p style="margin-bottom: 15px; color: #64748b; font-size: 15px;">Thủ tục này có nhiều mức độ / dịch vụ công khác nhau. Vui lòng chọn một DVC cụ thể dưới đây:</p>
+                <div id="dvc-list-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 45vh; overflow-y: auto; padding-right: 5px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HỘP THOẠI 2: CHỌN CƠ QUAN THỰC HIỆN -->
+    <div id="agencySelectionModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 650px;">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h3 class="modal-title" style="color: #D2232A;"><i class="fa-solid fa-building-flag"></i> CHỌN CƠ QUAN THỰC HIỆN</h3>
+                </div>
+                <button class="close-btn" onclick="document.getElementById('agencySelectionModal').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="padding-top: 10px; padding-bottom: 10px;">
+                <div style="margin-bottom: 15px; position: relative;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                    <input type="text" id="ny-agency-search" placeholder="Tìm nhanh cơ quan..." oninput="NyApp.filterAgencyList()" style="width: 100%; padding: 12px 12px 12px 35px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 15px;">
+                </div>
+                <div id="agency-list-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 40vh; overflow-y: auto; padding-right: 5px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BỘ GIẢ LẬP GIAO DIỆN TÀNG HÌNH (Chống sập lỗi Null cho data-loader.js) -->
+    <div style="display: none;">
+        <div id="loading"></div>
+        <div id="loading-text"></div>
+        <div id="last-update-time"></div>
+        <div id="stat-total-proc"></div>
+        <div id="stat-captinh"></div>
+        <div id="stat-capxa"></div>
+    </div>
+
+    <!-- Nhúng Script thư viện -->
+    <script src="../../cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/config.js"></script>
+    
+    <!-- KHIÊN BẢO VỆ DOM TỐI THƯỢNG (Chống sập data-loader khi tìm thiếu thẻ HTML) -->
+    <script>
+        const origGetId = document.getElementById.bind(document);
+        document.getElementById = function(id) { return origGetId(id) || document.createElement('div'); };
+        const origQuery = document.querySelector.bind(document);
+        document.querySelector = function(sel) { return origQuery(sel) || document.createElement('div'); };
+    </script>
+    
+    <!-- BÂY GIỜ GỌI DATA LOADER THOẢI MÁI MÀ KHÔNG SỢ SẬP -->
+    <script src="../js/data-loader.js"></script>
+    <script src="../js/niemyet.js"></script>
+
+    <!-- HỘP THOẠI CẤU HÌNH LĨNH VỰC KIOSK -->
+    <div id="nyConfigModalOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+        <div style="background: #fff; width: 90%; max-width: 900px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: 85vh; overflow: hidden; border: 1px solid #e2e8f0;">
+            
+            <div style="background: #D2232A; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: #fff; font-size: 18px; text-transform: uppercase;"><i class="fa-solid fa-gear"></i> Cấu hình hiển thị Lĩnh vực Kiosk</h3>
+                <button onclick="NyApp.closeConfigModal()" style="background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div style="padding: 20px 25px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex: 1; background: #f8fafc;">
+                <!-- Thanh công cụ tìm kiếm và lọc -->
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <select id="ny-config-cqcb" onchange="NyApp.filterConfigFields()" style="flex: 1; min-width: 250px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 15px; background: #fff; cursor: pointer;">
+                        <option value="">-- Tất cả Cơ quan công bố --</option>
+                    </select>
+                    <div style="flex: 1; min-width: 250px; position: relative;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
+                        <input type="text" id="ny-config-search" oninput="NyApp.filterConfigFields()" placeholder="Tìm nhanh tên lĩnh vực (VD: Đất đai, Lý lịch...)" style="width: 100%; padding: 12px 12px 12px 38px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 15px; box-sizing: border-box;">
+                    </div>
+                </div>
+                
+                <!-- Nút chọn tất cả -->
+                <div style="display: flex; align-items: center; gap: 10px; background: #fff; padding: 10px 15px; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                    <input type="checkbox" id="ny-config-checkall" onchange="NyApp.toggleAllConfigFields(this)" style="width: 18px; height: 18px; cursor: pointer; accent-color: #D2232A;">
+                    <label for="ny-config-checkall" style="font-weight: 700; cursor: pointer; color: #1e293b; font-size: 15px;">Chọn / Bỏ chọn tất cả Lĩnh vực đang hiển thị bên dưới</label>
+                </div>
+
+                <!-- Lưới hiển thị danh sách lĩnh vực -->
+                <div id="ny-config-fields-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; max-height: 350px; overflow-y: auto; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; align-content: start;">
+                    <!-- Checkbox lĩnh vực sẽ được render vào đây bằng JS -->
+                </div>
+            </div>
+
+            <div style="padding: 15px 25px; background: #fff; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 12px;">
+                <button onclick="NyApp.closeConfigModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #475569; font-weight: bold; cursor: pointer; font-size: 15px; transition: 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#fff'">Hủy bỏ</button>
+                <button onclick="NyApp.saveConfig()" style="padding: 10px 25px; border-radius: 8px; border: none; background: #D2232A; color: #fff; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px rgba(210,35,42,0.2); transition: 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#D2232A'"><i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình Lĩnh vực</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- FOOTER KIOSK NIÊM YẾT (CHUẨN KÍCH THƯỚC)   -->
+    <!-- ========================================== -->
+    <!-- ĐÃ THÊM: max-width: 1600px và margin: 0 auto để đồng bộ tuyệt đối với .kiosk-container -->
+    <footer style="max-width: 1600px; margin: 0 auto; margin-top: auto; padding: 0 20px 25px 20px; width: 100%; box-sizing: border-box; z-index: 10; position: relative;">
+        
+        <div style="background: #ffffff; width: 100%; border-radius: 12px; padding: 20px 30px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; box-sizing: border-box;">
+            
+            <!-- KHỐI 1: THÔNG TIN CƠ QUAN (TRÁI) -->
+            <div style="flex: 1; min-width: 300px;">
+                <h4 id="ny-footer-agency" style="color: #D2232A; margin: 0 0 10px 0; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                    <i class="fa-solid fa-building-flag" style="margin-right: 6px;"></i> TRUNG TÂM PHỤC VỤ HÀNH CHÍNH CÔNG
+                </h4>
+                <div style="font-size: 13.5px; color: #475569; line-height: 1.7; font-weight: 500;">
+                    <div><i class="fa-solid fa-location-dot" style="width: 22px; color: #94a3b8; text-align: center;"></i> <strong style="color: #1e293b;">Địa chỉ:</strong> <span id="ny-footer-address">Chưa cập nhật</span></div>
+                    <div><i class="fa-solid fa-phone" style="width: 22px; color: #94a3b8; text-align: center;"></i> <strong style="color: #1e293b;">Điện thoại:</strong> <span id="ny-footer-phone">Chưa cập nhật</span></div>
+                    <div><i class="fa-regular fa-clock" style="width: 22px; color: #94a3b8; text-align: center;"></i> <strong style="color: #1e293b;">Giờ làm việc:</strong> <span id="ny-footer-time">Sáng: 07h30 - 11h30 | Chiều: 13h00 - 17h00</span></div>
+                </div>
+            </div>
+
+            <!-- KHỐI 2: TUYÊN BỐ DỮ LIỆU (GIỮA) -->
+            <div style="flex: 1; max-width: 450px; padding: 0 20px; border-left: 1px dashed #cbd5e1; border-right: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: center;">
+                <div style="background: #f8fafc; border-radius: 8px; padding: 12px 18px; width: 100%; border: 1px solid #e2e8f0; display: flex; gap: 12px; align-items: center;">
+                    <i class="fa-solid fa-shield-halved" style="font-size: 24px; color: #D2232A; opacity: 0.8;"></i>
+                    <p style="margin: 0; font-size: 12.5px; color: #64748b; line-height: 1.5; text-align: justify;">
+                        <strong style="color: #D2232A;"><i class="fa-solid fa-database" style="margin-right: 4px;"></i> NGUỒN DỮ LIỆU:</strong> Dữ liệu thủ tục hành chính niêm yết được tham khảo từ <strong style="color: #1e293b;">Cổng Dịch vụ công quốc gia</strong>, được cập nhật định kỳ nhằm đảm bảo tính đồng bộ và chính xác.
+                    </p>
+                </div>
+            </div>
+
+            <!-- KHỐI 3: NÚT ABOUT (PHẢI) -->
+            <div style="flex: 0.5; min-width: 180px; display: flex; justify-content: flex-end; align-items: center;">
+                <button onclick="document.getElementById('aboutAuthorModal').style.display='flex'" style="background: #fff; color: #D2232A; border: 1.5px solid #D2232A; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 13px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(210, 35, 42, 0.1); display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='#D2232A'; this.style.color='#fff';" onmouseout="this.style.background='#fff'; this.style.color='#D2232A';">
+                    <i class="fa-solid fa-circle-info" style="font-size: 15px;"></i> About this page
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- MODAL THÔNG TIN TÁC GIẢ (TỐI GIẢN & CHUNG) -->
+    <!-- ========================================== -->
+    <div id="aboutAuthorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: #fff; width: 90%; max-width: 550px; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); overflow: hidden; border: 1px solid #e2e8f0; position: relative; animation: slideUp 0.3s ease-out;">
+            
+            <button onclick="document.getElementById('aboutAuthorModal').style.display='none'" style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.2); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; z-index: 10;" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'"><i class="fa-solid fa-xmark"></i></button>
+
+            <!-- Banner Header -->
+            <div style="background: linear-gradient(135deg, #D2232A, #991b1b); padding: 40px 25px 30px 25px; text-align: center; color: white;">
+                <div style="width: 85px; height: 85px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 4px solid rgba(255,255,255,0.2); background-clip: padding-box;">
+                    <i class="fa-solid fa-user-tie" style="font-size: 38px; color: #D2232A;"></i>
+                </div>
+                <h2 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;">ĐÔI LỜI TỪ TÁC GIẢ</h2>
+            </div>
+
+            <!-- Content Area -->
+            <div style="padding: 35px 35px 25px 35px; font-size: 15.5px; color: #334155; line-height: 1.8; text-align: justify; position: relative;">
+                <i class="fa-solid fa-quote-left" style="position: absolute; top: 25px; left: 15px; color: #f1f5f9; font-size: 60px; z-index: 0;"></i>
+                
+                <p style="margin-top: 0; position: relative; z-index: 1;">
+                    Với kinh nghiệm nhiều năm làm việc tại Bộ phận một cửa, tôi thấu hiểu những áp lực và cảm thông với những khó khăn trong công việc hằng ngày của cán bộ cấp cơ sở. 
+                </p>
+                <p style="position: relative; z-index: 1;">
+                    Công cụ này được phát triển với mong muốn góp phần giảm bớt áp lực, góp phần nâng cao hiệu quả xử lý công việc và phục vụ người dân tốt hơn.
+                </p>
+                
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed #cbd5e1; font-weight: 900; color: #D2232A; text-align: center; font-size: 17px; position: relative; z-index: 1; text-transform: uppercase; letter-spacing: 0.5px;">
+                    "Vì một nền hành chính phục vụ!"
+                </div>
+            </div>
+
+            <!-- Footer Contact -->
+            <div style="background: #f8fafc; padding: 20px 30px; border-top: 1px solid #e2e8f0; display: flex; justify-content: center; align-items: center; gap: 40px;">
+                <div style="display: flex; align-items: center; gap: 10px; color: #475569; font-weight: 600; font-size: 14.5px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: #64748b;"><i class="fa-solid fa-envelope"></i></div>
+                    Kết nối hỗ trợ
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; color: #D2232A; font-weight: 900; font-size: 18px; letter-spacing: 0.5px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-phone-volume"></i></div>
+                    0915 163 312
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+
+
+    <!-- MOBILE FIX FINAL: chuyển bảng TTHC 3 cột thành card dọc trên điện thoại -->
+    <style>
+    @media (max-width: 768px) {
+        /* Gỡ hoàn toàn cơ chế chia cột của TABLE trên mobile */
+        #ny-content-area .ny-table,
+        #ny-content-area .ny-table tbody,
+        #ny-content-area .ny-table tr,
+        #ny-content-area .ny-table td {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        #ny-content-area .ny-table {
+            table-layout: auto !important;
+            border-collapse: collapse !important;
+        }
+
+        /* colgroup trong source JS đang cố định 60px + auto + 140px; mobile phải bỏ nó */
+        #ny-content-area .ny-table colgroup,
+        #ny-content-area .ny-table col {
+            display: none !important;
+            width: auto !important;
+        }
+
+        /* Mỗi thủ tục = 1 card dọc */
+        #ny-content-area .ny-table tr {
+            padding: 16px 10px 18px 10px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            background: #fff !important;
+        }
+
+        /* Ẩn STT */
+        #ny-content-area .ny-table tr > td:first-child {
+            display: none !important;
+        }
+
+        /* Tên + metadata full ngang */
+        #ny-content-area .ny-table tr > td:nth-child(2) {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 0 10px 0 !important;
+            text-align: left !important;
+        }
+
+        #ny-content-area .ny-proc-title {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            white-space: normal !important;
+            word-break: normal !important;
+            overflow-wrap: anywhere !important;
+            font-size: 16px !important;
+            line-height: 1.45 !important;
+            margin: 0 0 7px 0 !important;
+        }
+
+        #ny-content-area .ny-proc-meta {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+            font-size: 12.5px !important;
+            line-height: 1.5 !important;
+            padding-bottom: 8px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        /* Cột Nộp hồ sơ không còn là cột 140px; biến thành hàng full ngang */
+        #ny-content-area .ny-table tr > td:nth-child(3) {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            text-align: left !important;
+        }
+
+        #ny-content-area .ny-action-nop {
+            display: flex !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            min-height: 44px !important;
+            box-sizing: border-box !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 0 !important;
+            padding: 12px 14px !important;
+            font-size: 16px !important;
+            border-radius: 8px !important;
+        }
+    }
+    </style>
+
+
+    <!-- MOBILE FIX: MODAL CHI TIẾT TTHC - chỉ áp dụng trên điện thoại -->
+    <style>
+    @media (max-width: 768px) {
+
+        /* 1) Modal chi tiết trở thành giao diện full-screen thật sự trên mobile */
+        #procedureDetailModal {
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100dvh !important;
+            padding: 0 !important;
+            align-items: stretch !important;
+            justify-content: stretch !important;
+            background: #fff !important;
+        }
+
+        #procedureDetailModal > .modal-box {
+            width: 100vw !important;
+            max-width: none !important;
+            height: 100dvh !important;
+            max-height: 100dvh !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            border: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* 2) Header đỏ: 2 tầng để không còn chen chúc */
+        #procedureDetailModal > .modal-box > div:first-child {
+            position: relative !important;
+            top: auto !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            gap: 10px !important;
+            padding: 12px 14px !important;
+        }
+
+        #procedureDetailModal > .modal-box > div:first-child > h2 {
+            flex: 0 0 100% !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            font-size: 14px !important;
+            line-height: 1.35 !important;
+            letter-spacing: 0 !important;
+            text-align: left !important;
+        }
+
+        #procedureDetailModal > .modal-box > div:first-child > div {
+            display: flex !important;
+            width: 100% !important;
+            gap: 8px !important;
+            align-items: stretch !important;
+        }
+
+        #btn-submit-dvc {
+            flex: 1 1 auto !important;
+            width: auto !important;
+            min-height: 44px !important;
+            justify-content: center !important;
+            padding: 10px 12px !important;
+            font-size: 14px !important;
+            line-height: 1.25 !important;
+            white-space: normal !important;
+        }
+
+        #procedureDetailModal > .modal-box > div:first-child > div > button:last-child {
+            flex: 0 0 44px !important;
+            width: 44px !important;
+            height: 44px !important;
+            min-width: 44px !important;
+            min-height: 44px !important;
+        }
+
+        /* 3) Phần cuộn chính */
+        #procedureDetailModal > .modal-box > div:nth-child(2) {
+            min-height: 0 !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 4) Khối thông tin cơ bản */
+        #procedureDetailModal > .modal-box > div:nth-child(2) > div:first-child {
+            padding: 18px 16px !important;
+            border-bottom-width: 6px !important;
+        }
+
+        #detail-title {
+            font-size: 20px !important;
+            line-height: 1.4 !important;
+            margin: 0 0 12px 0 !important;
+            overflow-wrap: anywhere !important;
+        }
+
+        /* Dòng Lĩnh vực + nút sao chép */
+        #detail-linhvuc {
+            max-width: 100% !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+        }
+
+        #btn-copy-ma {
+            width: 100% !important;
+            margin-left: 0 !important;
+            margin-top: 8px !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 5) Phá toàn bộ các grid 2 cột trong phần thông tin thành 1 cột */
+        #procedureDetailModal div[style*="grid-template-columns: 1fr 1fr"] {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) !important;
+            gap: 0 !important;
+            width: 100% !important;
+        }
+
+        /* 6) Mỗi cặp Nhãn - Giá trị thành 2 cột gọn, dễ đọc */
+        #procedureDetailModal #detail-ma-txt,
+        #procedureDetailModal #detail-soqd,
+        #procedureDetailModal #detail-ketqua,
+        #procedureDetailModal #detail-cqcb,
+        #procedureDetailModal #detail-cqth,
+        #procedureDetailModal #detail-cap,
+        #procedureDetailModal #detail-loai,
+        #procedureDetailModal #detail-formality,
+        #procedureDetailModal #detail-state,
+        #procedureDetailModal #detail-isInternal,
+        #procedureDetailModal #detail-doituong,
+        #procedureDetailModal #detail-diachi {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow-wrap: anywhere !important;
+            word-break: normal !important;
+            line-height: 1.45 !important;
+        }
+
+        #procedureDetailModal #detail-ma-txt { font-size: 15px !important; }
+
+        /* Các dòng chứa label + value */
+        #procedureDetailModal #detail-ma-txt,
+        #procedureDetailModal #detail-soqd {
+            align-self: start !important;
+        }
+
+        #procedureDetailModal #detail-ma-txt,
+        #procedureDetailModal #detail-soqd,
+        #procedureDetailModal #detail-ketqua,
+        #procedureDetailModal #detail-cqcb,
+        #procedureDetailModal #detail-cqth,
+        #procedureDetailModal #detail-cap,
+        #procedureDetailModal #detail-loai,
+        #procedureDetailModal #detail-formality,
+        #procedureDetailModal #detail-state,
+        #procedureDetailModal #detail-isInternal,
+        #procedureDetailModal #detail-doituong,
+        #procedureDetailModal #detail-diachi {
+            font-size: 14px !important;
+        }
+
+        /* Thu nhỏ các min-width 160px/140px vốn dành cho desktop */
+        #procedureDetailModal span[style*="min-width: 160px"],
+        #procedureDetailModal span[style*="min-width: 140px"] {
+            min-width: 112px !important;
+            width: 112px !important;
+            flex: 0 0 112px !important;
+            font-size: 13px !important;
+            line-height: 1.45 !important;
+        }
+
+        /* Các row thông tin phải full width, không bị ép bởi desktop */
+        #procedureDetailModal div[style*="display: flex"][style*="gap: 8px"] {
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 7) Khu vực tab */
+        #procedureDetailModal > .modal-box > div:nth-child(2) > div:last-child {
+            padding: 14px 14px 30px 14px !important;
+        }
+
+        #detail-tabs-menu {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 30 !important;
+            display: flex !important;
+            gap: 6px !important;
+            width: 100% !important;
+            margin: 0 0 16px 0 !important;
+            padding: 8px 0 6px 0 !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            background: #f8fafc !important;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #detail-tabs-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        #detail-tabs-menu button {
+            flex: 0 0 auto !important;
+            padding: 10px 12px !important;
+            font-size: 13px !important;
+            line-height: 1.25 !important;
+            white-space: nowrap !important;
+        }
+
+        #detail-tab-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            font-size: 14px !important;
+            line-height: 1.65 !important;
+            overflow-wrap: anywhere !important;
+        }
+
+        /* 8) Những bảng chi tiết phức tạp: giữ cấu trúc, cho vuốt ngang thay vì bóp chữ */
+        #detail-tab-content table {
+            min-width: 680px !important;
+        }
+
+        #detail-tab-content .procedure-documents-scroll {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #detail-tab-content img,
+        #detail-tab-content iframe {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+    }
+    </style>
+
+
+    <!-- MOBILE FIX VNEXT: full-width detail modal + đúng 2 cột lĩnh vực -->
+    <style>
+    @media (max-width: 768px) {
+
+        /* =========================================================
+           A. TRANG CHỦ: #ny-grid-view chỉ là vỏ; DIV con đầu tiên mới
+              là grid thật do renderLinhVucGrid() sinh ra.
+           ========================================================= */
+
+        #ny-grid-view:not([style*="none"]) {
+            display: block !important;
+        }
+
+        #ny-grid-view {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            padding: 0 !important;
+            margin-top: 18px !important;
+            overflow: visible !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Đây mới là wrapper chứa TOÀN BỘ thẻ lĩnh vực */
+        #ny-grid-view > div {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 18px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            padding: 8px 5px 40px 5px !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+
+            /* Hủy các rule cũ đang nhầm wrapper này là 1 card 50% */
+            flex: none !important;
+            min-width: 0 !important;
+            white-space: normal !important;
+        }
+
+        /* Các card thật là con trực tiếp của wrapper phía trên */
+        #ny-grid-view > div > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            padding: 16px !important;
+            aspect-ratio: 1 / 1.414 !important;
+        }
+
+        #ny-grid-view > div > div img {
+            width: 34px !important;
+            height: 34px !important;
+        }
+
+        /* =========================================================
+           B. MODAL CHI TIẾT: xóa padding mặc định của .modal-box.
+              Chính padding này tạo hai dải trắng hai bên.
+           ========================================================= */
+
+        #procedureDetailModal {
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100dvh !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            align-items: stretch !important;
+            justify-content: stretch !important;
+            background: #ffffff !important;
+            box-sizing: border-box !important;
+        }
+
+        #procedureDetailModal > .modal-box {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            height: 100dvh !important;
+            max-height: 100dvh !important;
+            min-width: 0 !important;
+
+            /* QUAN TRỌNG: .modal-box chung có padding desktop */
+            padding: 0 !important;
+            margin: 0 !important;
+
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+        }
+
+        /* Hai khối trực tiếp bên trong modal phải ăn đủ chiều ngang */
+        #procedureDetailModal > .modal-box > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Header đỏ full ngang */
+        #procedureDetailModal > .modal-box > div:first-child {
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Khối cuộn nội dung full ngang */
+        #procedureDetailModal > .modal-box > div:nth-child(2) {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            overflow-x: hidden !important;
+        }
+
+        /* Phần thông tin cơ bản + phần tab đều full ngang */
+        #procedureDetailModal > .modal-box > div:nth-child(2) > div {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Riêng nội dung bảng trong tab vẫn cho vuốt ngang */
+        #detail-tab-content {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #detail-tab-content > * {
+            max-width: none;
+        }
+    }
+    </style>
+
+
+    <!-- MOBILE FIX: gọn header lĩnh vực + PAKN modal có nút đóng luôn nhìn thấy -->
+    <style>
+    @media (max-width: 768px) {
+
+        /* =========================================================
+           1) HEADER LĨNH VỰC TRONG DANH SÁCH
+           - Ẩn icon folder
+           - Đưa "LĨNH VỰC: ..." lên trên, gọn hơn
+           ========================================================= */
+        #ny-content-area .ny-group-header {
+            display: block !important;
+            width: 100% !important;
+            min-height: 0 !important;
+            padding: 14px 16px !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            line-height: 1.35 !important;
+            font-size: 16px !important;
+            font-weight: 800 !important;
+            text-align: left !important;
+        }
+
+        #ny-content-area .ny-group-header > i {
+            display: none !important;
+        }
+
+        /* =========================================================
+           2) MODAL PHẢN ÁNH, KIẾN NGHỊ
+           - Không để hộp thoại bị căn giữa rồi tràn mất phần đầu
+           - Header sticky, nút X luôn nhìn thấy
+           - Chỉ nội dung bên dưới cuộn
+           ========================================================= */
+        #paknModal {
+            align-items: flex-start !important;
+            justify-content: center !important;
+            padding: 10px !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+        }
+
+        #paknModal > .modal-box {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: calc(100dvh - 20px) !important;
+            max-height: calc(100dvh - 20px) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+            box-sizing: border-box !important;
+        }
+
+        #paknModal .modal-header {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 50 !important;
+            flex: 0 0 auto !important;
+            width: 100% !important;
+            padding: 12px 14px !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            background: #fff !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+        }
+
+        #paknModal .modal-title-wrapper {
+            min-width: 0 !important;
+            flex: 1 1 auto !important;
+        }
+
+        #paknModal .modal-title {
+            margin: 0 !important;
+            font-size: 17px !important;
+            line-height: 1.3 !important;
+            white-space: normal !important;
+        }
+
+        #paknModal .close-btn {
+            display: flex !important;
+            flex: 0 0 42px !important;
+            width: 42px !important;
+            height: 42px !important;
+            min-width: 42px !important;
+            min-height: 42px !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: static !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            z-index: 60 !important;
+        }
+
+        /* Phần nội dung ngay sau header chiếm phần còn lại và tự cuộn */
+        #paknModal > .modal-box > .modal-header + div {
+            flex: 1 1 auto !important;
+            min-height: 0 !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            padding: 16px !important;
+            box-sizing: border-box !important;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Nút gửi PAKN không bị tràn */
+        #paknModal button {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+    }
+    </style>
+
+
+    <!-- MOBILE FIX FINAL: Tabs 2x2 + chuyển bảng chi tiết thành card dọc -->
+    <style>
+    @media (max-width: 768px) {
+
+        /* =========================================================
+           1) 4 TAB CHI TIẾT -> LƯỚI 2 CỘT x 2 HÀNG
+           ========================================================= */
+        #detail-tabs-menu {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 30 !important;
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+            width: 100% !important;
+            overflow: visible !important;
+            padding: 8px 0 10px 0 !important;
+            margin-bottom: 14px !important;
+            background: #f8fafc !important;
+            border-bottom: 0 !important;
+        }
+
+        #detail-tabs-menu button {
+            width: 100% !important;
+            min-width: 0 !important;
+            min-height: 46px !important;
+            padding: 9px 8px !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            white-space: normal !important;
+            text-align: center !important;
+            justify-content: center !important;
+            font-size: 12.5px !important;
+            line-height: 1.25 !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            background: #fff !important;
+        }
+
+        /* Giữ dấu hiệu tab đang chọn dễ nhìn hơn */
+        #detail-tabs-menu button[style*="border-bottom-color: rgb(210, 35, 42)"],
+        #detail-tabs-menu button[style*="border-bottom-color:#D2232A"],
+        #detail-tabs-menu button[style*="borderBottomColor"] {
+            border-color: #D2232A !important;
+        }
+
+        /* =========================================================
+           2) TOÀN BỘ BẢNG CHI TIẾT -> CARD DỌC, KHÔNG CUỘN NGANG
+           ========================================================= */
+        #detail-tab-content {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        #detail-tab-content table {
+            display: block !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        #detail-tab-content thead,
+        #detail-tab-content colgroup {
+            display: none !important;
+        }
+
+        #detail-tab-content tbody {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        /* Mỗi dòng dữ liệu = 1 card */
+        #detail-tab-content tbody > tr:not(.execution-case-row) {
+            display: block !important;
+            width: 100% !important;
+            margin: 0 0 14px 0 !important;
+            padding: 12px 13px !important;
+            box-sizing: border-box !important;
+            background: #fff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            box-shadow: 0 1px 3px rgba(15,23,42,0.04) !important;
+        }
+
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td {
+            display: grid !important;
+            grid-template-columns: 112px minmax(0, 1fr) !important;
+            gap: 10px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            padding: 9px 0 !important;
+            box-sizing: border-box !important;
+            border: 0 !important;
+            border-bottom: 1px dashed #e2e8f0 !important;
+            text-align: left !important;
+            vertical-align: top !important;
+            overflow-wrap: anywhere !important;
+            word-break: normal !important;
+            white-space: normal !important;
+        }
+
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td:last-child {
+            border-bottom: 0 !important;
+        }
+
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td::before {
+            display: block !important;
+            color: #64748b !important;
+            font-size: 12px !important;
+            line-height: 1.35 !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+        }
+
+        /* ---------------------------------------------------------
+           2A) CÁCH THỨC THỰC HIỆN - bảng 4 cột
+           --------------------------------------------------------- */
+        #detail-tab-content table:not(.procedure-documents-table) tbody > tr > td:nth-child(1)::before {
+            content: "Hình thức";
+        }
+        #detail-tab-content table:not(.procedure-documents-table) tbody > tr > td:nth-child(2)::before {
+            content: "Thời gian giải quyết";
+        }
+        #detail-tab-content table:not(.procedure-documents-table) tbody > tr > td:nth-child(3)::before {
+            content: "Phí / Lệ phí";
+        }
+        #detail-tab-content table:not(.procedure-documents-table) tbody > tr > td:nth-child(4)::before {
+            content: "Mô tả thêm";
+        }
+
+        /* ---------------------------------------------------------
+           2B) THÀNH PHẦN HỒ SƠ - bảng 3 cột
+           --------------------------------------------------------- */
+        #detail-tab-content .procedure-documents-wrapper,
+        #detail-tab-content .procedure-documents-scroll {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+        }
+
+        #detail-tab-content .procedure-documents-table {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        /* Dòng tên trường hợp hồ sơ vẫn full-width */
+        #detail-tab-content .procedure-documents-table .execution-case-row {
+            display: block !important;
+            width: 100% !important;
+            margin: 16px 0 8px 0 !important;
+        }
+
+        #detail-tab-content .procedure-documents-table .execution-case-row > td {
+            display: block !important;
+            width: 100% !important;
+            padding: 10px 12px !important;
+            box-sizing: border-box !important;
+            border: 0 !important;
+            border-radius: 8px !important;
+            background: #fef2f2 !important;
+        }
+
+        #detail-tab-content .procedure-documents-table .document-row > td:nth-child(1)::before {
+            content: "STT";
+        }
+        #detail-tab-content .procedure-documents-table .document-row > td:nth-child(2)::before {
+            content: "Tên giấy tờ, tài liệu cần nộp";
+        }
+        #detail-tab-content .procedure-documents-table .document-row > td:nth-child(3)::before {
+            content: "Số lượng";
+        }
+
+        /* STT không cần chiếm nhiều chỗ */
+        #detail-tab-content .procedure-documents-table .document-row > td:nth-child(1) {
+            grid-template-columns: 112px minmax(0, 1fr) !important;
+        }
+
+        /* Nội dung giấy tờ/biểu mẫu luôn co trong màn hình */
+        #detail-tab-content .document-content,
+        #detail-tab-content .document-name,
+        #detail-tab-content .attachment-list,
+        #detail-tab-content .attachment-item,
+        #detail-tab-content .attachment-file,
+        #detail-tab-content .attachment-file-name {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+        }
+
+        #detail-tab-content .attachment-item {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 8px !important;
+        }
+
+        #detail-tab-content .attachment-download {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+    }
+    </style>
+
+
+    <!-- MOBILE REFINEMENT: label/value xếp dọc + loại bỏ khoảng trắng thừa -->
+    <style>
+    @media (max-width: 768px) {
+
+        /* Mỗi trường trong card: tiêu đề 1 hàng, nội dung 1 hàng bên dưới */
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            height: auto !important;
+            min-height: 0 !important;
+
+            margin: 0 !important;
+            padding: 10px 0 !important;
+
+            border: 0 !important;
+            border-bottom: 1px dashed #e2e8f0 !important;
+
+            text-align: left !important;
+            vertical-align: top !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere !important;
+            word-break: normal !important;
+
+            line-height: 1.55 !important;
+            box-sizing: border-box !important;
+        }
+
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td:last-child {
+            border-bottom: 0 !important;
+            padding-bottom: 2px !important;
+        }
+
+        /* Nhãn nằm riêng một hàng trên nội dung */
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td::before {
+            display: block !important;
+            width: 100% !important;
+            margin: 0 0 5px 0 !important;
+            padding: 0 !important;
+
+            color: #64748b !important;
+            font-size: 11.5px !important;
+            line-height: 1.35 !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+        }
+
+        /* Card gọn lại, không để khoảng trắng chết giữa các trường */
+        #detail-tab-content tbody > tr:not(.execution-case-row) {
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 0 !important;
+
+            margin: 0 0 12px 0 !important;
+            padding: 10px 13px !important;
+
+            background: #fff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Hủy hoàn toàn mọi kích thước/căn chỉnh cũ của cell desktop */
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td[style] {
+            height: auto !important;
+            min-height: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Thành phần hồ sơ cũng theo nguyên tắc nhãn trên - nội dung dưới */
+        #detail-tab-content .procedure-documents-table .document-row > td {
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 10px 0 !important;
+        }
+
+        /* Nội dung không bị tạo chiều cao giả */
+        #detail-tab-content .document-content,
+        #detail-tab-content .document-name,
+        #detail-tab-content .quantity-cell,
+        #detail-tab-content .attachment-list,
+        #detail-tab-content .attachment-item,
+        #detail-tab-content .attachment-file {
+            height: auto !important;
+            min-height: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Khoảng cách giữa các file đính kèm vừa đủ */
+        #detail-tab-content .attachment-list {
+            margin-top: 8px !important;
+        }
+
+        #detail-tab-content .attachment-item + .attachment-item {
+            margin-top: 8px !important;
+        }
+    }
+    </style>
+
+
+    <!-- MOBILE FIX: loại bỏ khoảng trắng do white-space: pre-wrap của detail-tab-content -->
+    <style>
+    @media (max-width: 768px) {
+
+        #detail-tab-content,
+        #detail-tab-content table,
+        #detail-tab-content tbody,
+        #detail-tab-content tr,
+        #detail-tab-content td {
+            white-space: normal !important;
+        }
+
+        #detail-tab-content tbody > tr:not(.execution-case-row) {
+            height: auto !important;
+            min-height: 0 !important;
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+        }
+
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td {
+            display: block !important;
+            height: auto !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 9px 0 !important;
+            line-height: 1.5 !important;
+        }
+
+        #detail-tab-content tbody > tr:not(.execution-case-row) > td::before {
+            margin: 0 0 4px 0 !important;
+        }
+
+        #detail-tab-content > div[style*="white-space: pre-wrap"],
+        #detail-tab-content h4 + div[style*="white-space: pre-wrap"] {
+            white-space: pre-wrap !important;
+        }
+    }
+    </style>
+
+
+</body></html>
