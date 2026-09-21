@@ -254,3 +254,64 @@ const DataLoader = {
         } catch (e) {}
     }
 };
+
+// =======================================================================
+// MODULE QUẢN TRỊ CƠ SỞ DỮ LIỆU QUỐC GIA BẰNG CÔNG NGHỆ INDEXED_DB
+// =======================================================================
+const MasterDB = {
+    dbName: 'MasterDVC_Database',
+    storeName: 'ThuTucQuocGia',
+    
+    init() {
+        return new Promise((resolve, reject) => {
+            let req = indexedDB.open(this.dbName, 1);
+            req.onupgradeneeded = e => {
+                let db = e.target.result;
+                if(!db.objectStoreNames.contains(this.storeName)) db.createObjectStore(this.storeName);
+            };
+            req.onsuccess = e => resolve(e.target.result);
+            req.onerror = e => reject(e.target.error);
+        });
+    },
+    
+    async save(data) {
+        let db = await this.init();
+        return new Promise(resolve => {
+            let tx = db.transaction(this.storeName, 'readwrite');
+            tx.objectStore(this.storeName).put(data, 'masterData');
+            tx.oncomplete = () => resolve();
+        });
+    },
+    
+    async get() {
+        let db = await this.init();
+        return new Promise(resolve => {
+            let tx = db.transaction(this.storeName, 'readonly');
+            let req = tx.objectStore(this.storeName).get('masterData');
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => resolve(null);
+        });
+    }
+};
+
+const DVCQG_CDN_BASE = "https://raw.githubusercontent.com/ChippedTopaz/am-sieu-toc-data/data";
+
+DataLoader.loadMasterData = async function() {
+    window.appData.masterDatabase = window.appData.masterDatabase || [];
+    if (window.appData.masterDatabase.length > 0) return; // Đã nạp vào RAM thì bỏ qua
+    
+    try {
+        // Thay dòng timeKey cũ bằng dòng này để phá cache tuyệt đối
+        let timeKey = new Date().getTime(); // Sinh số ngẫu nhiên theo từng mili-giây
+        let res = await fetch(`${DVCQG_CDN_BASE}/index.json?_t=${timeKey}`);
+        
+        if (!res.ok) throw new Error("Lỗi HTTP: " + res.status);
+        
+        let data = await res.json();
+        window.appData.masterDatabase = data;
+        console.log("⚡ Tải Index Data (CDN) thành công!");
+    } catch(e) {
+        console.error("Lỗi tải Master Data từ CDN:", e);
+        if (app.showToast) app.showToast("⚠️ Không thể kết nối với kho dữ liệu Quốc gia!", 4000);
+    }
+};

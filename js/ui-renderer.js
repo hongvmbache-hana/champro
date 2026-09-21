@@ -44,97 +44,38 @@ const UIRenderer = {
     },
   
 
-    // [YÊU CẦU 3.B]: THUẬT TOÁN SINH LINK THEO CẤU HÌNH BỘ HOẶC TỈNH
-   // [YÊU CẦU 3.B + CẬP NHẬT LOẠI HỆ THỐNG]: THUẬT TOÁN SINH LINK THEO BỘ/TỈNH
-    // THUẬT TOÁN ĐỊNH TUYẾN URL THÔNG MINH
-    // THUẬT TOÁN ĐỊNH TUYẾN URL THÔNG MINH (XÉT KÉP ĐIỀU KIỆN TỪNG DÒNG)
+    // [YÊU CẦU ĐÃ NÂNG CẤP]: THUẬT TOÁN ĐỊNH TUYẾN URL SIÊU TỐC (MỚI)
     generateFinalUrl(coquanObj, procMaDVC) {
-        let linhVuc = coquanObj['LinhVuc'] || 'KHÁC';
-        let loaiHeThong = (coquanObj['LoaiHeThong'] || '').toLowerCase().trim(); 
-        let tenTinh = (coquanObj['TenTinh'] || '').trim();
-        let tenCoQuan = (coquanObj['TenCQTH'] || '').trim(); // Lấy tên cơ quan để kiểm tra
+        // 1. Trích xuất các biến cần thiết từ dòng dữ liệu (coquanObj)
+        let cleanKey = (k) => k.toLowerCase().replace(/\s/g, '');
 
-        let targetSystem = "";
-        if (loaiHeThong.includes('trên hệ thống bộ ngành')) {
-            // Quét tìm Lĩnh vực an toàn bất chấp dấu
-            for (let key in window.appData.cauHinhLink) {
-                if (window.isMatch(key, linhVuc)) {
-                    targetSystem = window.appData.cauHinhLink[key];
-                    break;
-                }
-            }
-        } else {
-            targetSystem = tenTinh; 
-        }
-
-        if (!targetSystem) targetSystem = tenTinh;
+        let maTTHC = (coquanObj['MaTTHC'] || '').toString().trim();
+        let maCQTH = (coquanObj['MaCQTH'] || '').toString().trim();
+        let maTTHCDP = (coquanObj['MaTTHCDP'] || coquanObj['MaTTHC'] || '').toString().trim(); // Fallback về MaTTHC nếu DP trống
+        let maDVC = (procMaDVC || '').toString().trim();
         
-        // Quét tìm URL Config an toàn bất chấp dấu
-        let urlConfig = null;
-        for (let key in window.appData.danhMucURL) {
-            if (window.isMatch(key, targetSystem)) {
-                urlConfig = window.appData.danhMucURL[key];
-                break;
-            }
-        }
-        if (!urlConfig) return null;
+        // 2. Trích xuất cột Citizen URL
+        let citizenUrlKey = Object.keys(coquanObj).find(k => cleanKey(k) === 'citizenurl');
+        let citizenUrl = citizenUrlKey ? (coquanObj[citizenUrlKey] || '').toString().trim() : '';
 
-        let linkMau = urlConfig.LinkMau;
-        let tenMien = urlConfig.TenMien;
-        if (!tenMien.startsWith('http')) tenMien = 'https://' + tenMien;
+        // Nếu thiếu link gốc hoặc thiếu mã bắt buộc thì dừng
+        if (!citizenUrl || !maTTHC || !maCQTH) return null;
 
-        let capThucHien = "2"; // Mặc định cấp xã
-        let tenCoQuanLower = tenCoQuan.toLowerCase();
-        
-        // Điều kiện: Có chữ "Sở" VÀ không phải là Phường/Xã/Thị trấn
-        let laCapXa = tenCoQuanLower.includes('phường') || tenCoQuanLower.includes('xã') || tenCoQuanLower.includes('đặc khu');
-        
-        if (tenCoQuanLower.includes('sở') && !laCapXa) {
-            capThucHien = "1";
+        // Bọc an toàn giao thức HTTPS nếu thiếu
+        let baseLink = citizenUrl.replace(/\s/g, '');
+        if (!baseLink.startsWith('http://') && !baseLink.startsWith('https://')) {
+            baseLink = 'https://' + baseLink;
         }
 
-        // Kiểm tra điều kiện riêng cho Bộ Tư pháp và Bộ Dân tộc Tôn giáo
-        let isSpecialMinistry = (targetSystem === "Bộ Tư pháp" || targetSystem === "Bộ Dân tộc và Tôn giáo");
+        // 3. Xử lý dấu nối (Nếu link gốc đã có '?' thì dùng '&', nếu chưa có thì dùng '?')
+        let separator = baseLink.includes('?') ? '&' : '?';
 
-        let maTTHC = (coquanObj['MaTTHC'] || '').trim();
-        let maCQTH = (coquanObj['MaCQTH'] || '').trim();
-        let maTTHCDP = (coquanObj['MaTTHCDP'] || coquanObj['MaTTHC'] || '').trim(); 
-        
-        // Trích xuất biến PID từ data (nếu ô rỗng thì trả về chuỗi rỗng)
-        let pid = (coquanObj['pid'] || coquanObj['PID'] || '').toString().trim();
-        console.log("Dữ liệu của thủ tục này là:", coquanObj, "Mã PID hệ thống đang hiểu là:", pid);
-
-        if (!maTTHC || !maCQTH) return null;
-
-        let finalUrl = linkMau
-            .replace(/{TenMien}/gi, tenMien)
-            .replace(/{MaTTHC}/gi, maTTHC)
-            .replace(/{MaCQTH}/gi, maCQTH)
-            .replace(/{MaCoQuanThucHien}/gi, maCQTH)
-            .replace(/{MaDVC}/gi, procMaDVC)
-            .replace(/{MaTTHCDP}/gi, maTTHCDP)
-            .replace(/{TenTinh}/gi, tenTinh)
-            .replace(/{pid}/gi, pid); // Bổ sung thay thế PID
-
-        // Bổ sung tham số CapThucHien nếu là bộ đặc thù
-        if (isSpecialMinistry) {
-            // Nếu link mẫu đã có sẵn tham số CapThucHien thì thay thế, chưa có thì nối đuôi
-            if (finalUrl.includes('CapThucHien=')) {
-                finalUrl = finalUrl.replace(/CapThucHien=\d+/gi, 'CapThucHien=' + capThucHien);
-            } else {
-                finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'CapThucHien=' + capThucHien;
-            }
-        }
-
-        // XỬ LÝ NGOẠI LỆ CHO THỪA THIÊN HUẾ (Bọc thép 100%):
-        // Nếu link sinh ra có chứa tên miền của Huế MÀ biến pid lại rỗng
-        if (finalUrl.includes('dichvucong.hue.gov.vn') && pid === '') {
-            finalUrl = `https://dichvucong.gov.vn/p/home/dvc-chi-tiet-thu-tuc-hanh-chinh.html?ma_thu_tuc=${procMaDVC}`;
-        }
+        // 4. ÉP KHUÔN CHUẨN XÁC THEO CÔNG THỨC 
+        let finalUrl = `${baseLink}${separator}MaTTHC=${maTTHC}&MaCoQuanThucHien=${maCQTH}&MaDVC=${maDVC}&MaTTHCDP=${maTTHCDP}&vneid=1`;
 
         return finalUrl;
-    }, // (Dấu ngoặc đóng của hàm)
-
+    },
+    
     // ==============================================================
     // CÁC HÀM RENDER DỊCH VỤ CÔNG (Giữ nguyên cấu trúc HTML để khớp CSS cũ)
     // ==============================================================
@@ -540,6 +481,49 @@ const UIRenderer = {
         // Vẽ thêm Tên Tỉnh cho các Row thủ tục
         let tenTinhHtml = tenTinh ? `<i class="fa-solid fa-map-location-dot"></i> ${tenTinh} | ` : '';
 
+        // --- BẮT ĐẦU: TRÍCH XUẤT VÀ TẠO BADGE (VIỀN MÀU) ---
+        let mucDoText = 'Chưa phân loại';
+        let capThucHienText = 'Chưa rõ cấp';
+
+        if (procData) {
+            let cleanKey = (k) => k.toLowerCase().replace(/[_-\s]/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+            
+            let mucDoKey = Object.keys(procData).find(k => cleanKey(k).match(/(mucdo|cungcap|toantrinh|hinhthuc)/));
+            if (mucDoKey) {
+                let mdVal = (procData[mucDoKey] || '').toString().toLowerCase();
+                if (mdVal.includes('toàn trình') || mdVal.includes('toantrinh') || mdVal === '4') mucDoText = 'Toàn trình';
+                else if (mdVal.includes('một phần') || mdVal.includes('motphan') || mdVal.includes('1 phần') || mdVal === '3') mucDoText = 'Một phần';
+            }
+
+            let capKey = Object.keys(procData).find(k => cleanKey(k).includes('capthuchien'));
+            if (capKey) capThucHienText = procData[capKey] || 'Chưa rõ cấp';
+        }
+
+        // 1. Tạo Badge Mức độ DVC
+        let mucDoHtml = '';
+        if (mucDoText === 'Toàn trình') {
+            mucDoHtml = `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #15803d; background: #f0fdf4; border: 1px solid #15803d; white-space: nowrap;">Toàn trình</span>`; // Xanh lá đậm
+        } else if (mucDoText === 'Một phần') {
+            mucDoHtml = `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #c2410c; background: #fff7ed; border: 1px solid #c2410c; white-space: nowrap;">Một phần</span>`; // Cam đậm
+        } else {
+            mucDoHtml = `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #64748b; background: #f8fafc; border: 1px solid #cbd5e1; white-space: nowrap;">${mucDoText}</span>`;
+        }
+
+        // 2. Tạo Badge Cấp thực hiện (Có khả năng tách nhiều cấp giống bảng Thống kê)
+        let capHtml = '';
+        let capStr = capThucHienText.toLowerCase();
+        
+        if (capStr.includes('bộ')) capHtml += `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #dc2626; background: #fef2f2; border: 1px solid #dc2626; margin-right: 4px; white-space: nowrap;">Cấp Bộ</span>`;
+        if (capStr.includes('tỉnh') || capStr.includes('thành phố')) capHtml += `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #0369a1; background: #f0f9ff; border: 1px solid #0369a1; margin-right: 4px; white-space: nowrap;">Cấp Tỉnh</span>`; // Xanh nước biển
+        if (capStr.includes('huyện') || capStr.includes('quận') || capStr.includes('thị xã')) capHtml += `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #7e22ce; background: #faf5ff; border: 1px solid #7e22ce; margin-right: 4px; white-space: nowrap;">Cấp Huyện</span>`;
+        if (capStr.includes('xã') || capStr.includes('phường') || capStr.includes('thị trấn')) capHtml += `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #c2410c; background: #fff7ed; border: 1px solid #c2410c; margin-right: 4px; white-space: nowrap;">Cấp Xã</span>`; // Cam đậm
+
+        // Nếu dữ liệu dị biệt không khớp từ khóa nào, in ra nguyên bản với viền xám
+        if (!capHtml) {
+             capHtml = `<span style="padding: 2px 6px; border-radius: 4px; font-size: 11.5px; font-weight: 600; color: #64748b; background: #f8fafc; border: 1px solid #cbd5e1; white-space: nowrap;">${capThucHienText}</span>`;
+        }
+        // --- KẾT THÚC TRÍCH XUẤT ---
+
         let row = document.createElement('div');
         row.className = 'list-row search-item';
         
@@ -550,7 +534,15 @@ const UIRenderer = {
                 </div>
                 <div class="row-content" style="flex: 1;">
                     <div class="row-title" title="${safeTooltip}" style="display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${displayTenDVC}</div>
-                    <div class="row-badge">${tenTinhHtml}Mã DVC: ${displayMaDVC}</div>
+                    
+                    <!-- DÒNG THÔNG TIN ĐÃ ĐƯỢC CHÈN THẺ MÀU -->
+                    <div class="row-badge" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px;">
+                        <span style="color: #64748b;">${tenTinhHtml}Mã DVC: ${displayMaDVC}</span>
+                        <span style="color: #cbd5e1;">|</span>
+                        ${mucDoHtml}
+                        ${capHtml}
+                    </div>
+
                 </div>
             </div>
 
